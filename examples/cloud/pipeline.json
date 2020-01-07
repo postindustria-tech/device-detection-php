@@ -1,0 +1,18 @@
+{
+  "PipelineOptions": {
+    "Elements": [
+      {
+        "BuilderName": "fiftyone\\pipeline\\cloudrequestengine\\cloudRequestEngine",
+        "BuildParameters": {
+          "resourceKey": "Obtain a resource key from https://configure.51degrees.com"
+        }
+      },
+      {
+        "BuilderName": "fiftyone\\pipeline\\devicedetection\\deviceDetectionCloud"
+      },
+      {
+        "BuilderName": "fiftyone\\pipeline\\javascriptbundler\\javaScriptBundlerElement"
+      }
+    ]
+  }
+}
