@@ -1,3 +1,5 @@
+# 51Degrees PHP Device Detection
+
 ![51Degrees](https://51degrees.com/DesktopModules/FiftyOne/Distributor/Logo.ashx?utm_source=github&utm_medium=repository&utm_content=readme_main&utm_campaign=php-open-source "Data rewards the curious") **PHP Device Detection**
 
 [Developer Documentation](https://docs.51degrees.com?utm_source=github&utm_medium=repository&utm_content=documentation&utm_campaign=php-open-source "developer documentation")
@@ -24,6 +26,14 @@ PHP -S localhost:3000 cloud/gettingstarted.php
 
 This will start a local web server listening on port 3000. 
 Open your web browser and browse to http://localhost:3000/ to see the example in action.
+
+## Tests
+
+This repo has tests for the examples. To run the tests, make sure PHPUnit is installed then, in the root of this repo, call:
+
+```
+phpunit --log-junit test-results.xml
+```
 
 ## On-premise device detection
 The on-premise implementation of device detection is much faster but requires more memory and processing power than the cloud version.
