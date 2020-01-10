@@ -50,37 +50,42 @@ $pipeline = $builder->build();
 // Here we create a function that checks if a supplied user agent is a mobile
 // device, the pipeline can be reused multiple times but a flowData objects 
 // it creates can only be processed once
-function checkIfMobile($userAgent, $pipeline) {
 
-    // We create the flowData object that is used to add evidence to and 
-    // read data from 
-    $flowData = $pipeline->createFlowData();
+if(!function_exists("checkIfMobile")){
 
-    // We set the user agent
-    $flowData->evidence->set("header.user-agent", $userAgent);
+    function checkIfMobile($userAgent, $pipeline) {
 
-    // Now we process the flowData
-    $result = $flowData->process();
+        // We create the flowData object that is used to add evidence to and 
+        // read data from 
+        $flowData = $pipeline->createFlowData();
 
-    echo "Is user agent " . $userAgent . " a mobile device? \n";
+        // We set the user agent
+        $flowData->evidence->set("header.user-agent", $userAgent);
 
-    // First we check if the property we're looking for has a meaningful result
+        // Now we process the flowData
+        $result = $flowData->process();
 
-    if($result->device->ismobile->hasValue){
+        echo "Is user agent " . $userAgent . " a mobile device? \n";
 
-        var_dump($result->device->ismobile->value);
+        // First we check if the property we're looking for has a meaningful result
 
-    } else {
+        if($result->device->ismobile->hasValue){
 
-        // If it doesn't have a meaningful result, we echo out the reason 
-        //why it wasn't meaningful
+            var_dump($result->device->ismobile->value);
 
-        echo($result->device->ismobile->noValueMessage);
+        } else {
 
-    }
+            // If it doesn't have a meaningful result, we echo out the reason 
+            //why it wasn't meaningful
+
+            echo($result->device->ismobile->noValueMessage);
+
+        }
 
 
-};
+    };
+
+}
 
 // Some example User Agents to test
 

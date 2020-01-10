@@ -59,7 +59,7 @@ $flowData->evidence->setFromWebRequest();
 // Now we process the flowData
 $result = $flowData->process();
 
-echo "Is user agent " . $userAgent . " a mobile device? \n";
+echo "You user agent is " . $flowData->evidence->get('header.user-agent') . ". Is this a mobile device? \n";
 
 // First we check if the property we're looking for has a meaningful result
 

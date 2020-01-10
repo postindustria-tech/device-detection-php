@@ -52,6 +52,8 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
 
         $cloud->setResourceKey($settings["resourceKey"]);
 
+        $cloud->baseURL = "https://cloud.51degrees.com/api/v4/";
+
         $flowElements = [];
 
         $flowElements[] = $cloud;
