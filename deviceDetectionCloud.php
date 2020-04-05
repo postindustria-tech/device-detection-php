@@ -26,7 +26,7 @@ namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\engines\aspectDataDictionary;
 use fiftyone\pipeline\engines\engine;
-use fiftyone\pipeline\engines\aspectPropertyValue;
+use fiftyone\pipeline\core\aspectPropertyValue;
 
 class deviceDetectionCloud extends engine {
 

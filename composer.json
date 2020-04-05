@@ -26,38 +26,7 @@
         "classmap": [
             "deviceDetectionCloud.php",
             "deviceDetectionPipelineBuilder.php"
-        ]
-    },
-    "repositories": {
-        "dev-core": {
-            "type": "path",
-            "url": "../FiftyOne.Pipeline.Core",
-            "options": {
-                "symlink": true
-            }
-        },
-        "dev-engines": {
-            "type": "path",
-            "url": "../FiftyOne.Pipeline.Engines",
-            "options": {
-                "symlink": true
-            }
-        },
-        "dev-cloud-request": {
-            "type": "path",
-            "url": "../FiftyOne.Pipeline.CloudRequestEngine",
-            "options": {
-                "symlink": true
-            }
-        },
-        "dev-javascript": {
-            "type": "path",
-            "url": "../FiftyOne.Pipeline.JavaScriptBundler",
-            "options": {
-                "symlink": true
-            }
-        }
-        
+        ]   
     },
     "require": {
         "51degrees/fiftyone.pipeline.core": "@dev",

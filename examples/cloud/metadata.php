@@ -40,7 +40,7 @@ use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
 // To access paid-for properties, you will also need to enter your license key.
 
 $builder = new deviceDetectionPipelineBuilder(array(
-    "resourceKey" => "AQRShOZRUr91okLv1kg",
+    "resourceKey" => "",
     "restrictedProperties" => array() // All properties by default
 ));
 

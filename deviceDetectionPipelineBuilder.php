@@ -29,7 +29,6 @@ use fiftyone\pipeline\core\pipelineBuilder;
 use fiftyone\pipeline\core\pipeline;
 use fiftyone\pipeline\cloudrequestengine\cloudRequestEngine;
 use fiftyone\pipeline\devicedetection\deviceDetectionCloud;
-use fiftyone\pipeline\javascriptbundler\javaScriptBundlerElement;
 
 class deviceDetectionPipelineBuilder extends pipelineBuilder {
 
@@ -39,6 +38,8 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
     public $licenseKey;
 
     public function __construct($settings){
+
+        parent::__construct($settings);
 
         // Add cloudrequestEngine
 
@@ -58,12 +59,6 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
 
         $flowElements[] = $cloud;
 
-        // Add JavaScript bundler
-
-        $javascriptBundler = new javaScriptBundlerElement();
-
-        $flowElements[] = $javascriptBundler;
-
         $deviceDetection = new deviceDetectionCloud();
 
         if(isset($settings["restrictedProperties"])){
@@ -77,9 +72,7 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
         // Add any extra flowElements
         
         $flowElements = array_merge($flowElements, $this->flowElements);
-        
-        $flowElements[] = $javascriptBundler;
-        
+                
         $this->flowElements = $flowElements;
 
     }

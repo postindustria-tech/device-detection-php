@@ -41,8 +41,7 @@ use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
 // also need to enter your license key.
 
 $builder = new deviceDetectionPipelineBuilder(array(
-    "resourceKey" => "AQS5HKcyqliVnYhx10g",
-    "restrictedProperties" => array() // All properties by default
+    "resourceKey" => ""
 ));
 
 // Next we build the pipeline. We could additionally add extra engines and/or
@@ -59,13 +58,13 @@ $flowData->evidence->setFromWebRequest();
 // Now we process the flowData
 $result = $flowData->process();
 
-echo "You user agent is " . $flowData->evidence->get('header.user-agent') . ". Is this a mobile device? \n";
-
 // First we check if the property we're looking for has a meaningful result
 
-if($result->device->ismobile->hasValue){
+if($result->device->hardwarename->hasValue){
 
-    var_dump($result->device->ismobile->value);
+    // This should be a list of devices
+
+    var_dump($result->device->hardwarename->value);
 
 } else {
 
@@ -80,4 +79,4 @@ if($result->device->ismobile->hasValue){
 // will set cookies and other information allowing us to access extra 
 // properties such as device->screenpixelwidth.
 
-echo "<script>" . $flowData->javascriptbundler->javascript . "</script>";
+echo "<script>" . $flowData->javascriptbuilder->javascript . "</script>";
