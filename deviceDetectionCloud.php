@@ -59,15 +59,13 @@ class deviceDetectionCloud extends engine {
             
             $cloudData = \json_decode($cloudData, true);
 
-            $nullValueReasons = $cloudData["nullValueReasons"];
-
             $result = [];
 
             foreach ($cloudData["device"] as $key => $value){
 
-                if(isset($cloudData["nullValueReasons"]["device." . $key])){
+                if(isset($cloudData["device"][$key . "nullreason"]){
                     
-                    $result[$key] = new aspectPropertyValue($cloudData["nullValueReasons"]["device." . $key]);
+                    $result[$key] = new aspectPropertyValue($cloudData["device"][$key . "nullreason"]);
 
                 } else {
 
