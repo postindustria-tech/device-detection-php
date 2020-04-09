@@ -55,6 +55,10 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
 
         $cloud->baseURL = "https://cloud.51degrees.com/api/v4/";
 
+        if(isset($settings["cloudEndPoint"])){
+            $cloud->baseURL = $settings["cloudEndPoint"];
+        }
+
         $flowElements = [];
 
         $flowElements[] = $cloud;

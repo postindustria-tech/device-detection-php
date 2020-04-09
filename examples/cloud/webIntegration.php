@@ -35,48 +35,63 @@
 require(__DIR__ . "/../../vendor/autoload.php");
 use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
 
-// We then create a pipeline with the builder. To access properties other than
-// IsMobile, create your own recource key for free at 
-// https://configure.51degrees.com. To access paid-for properties, you will 
-// also need to enter your license key.
-
-$builder = new deviceDetectionPipelineBuilder(array(
-    "resourceKey" => ""
-));
-
-// Next we build the pipeline. We could additionally add extra engines and/or
-// flowElements here before building.
-$pipeline = $builder->build();
-
-// We create the flowData object that is used to add evidence to and read
-// data from 
-$flowData = $pipeline->createFlowData();
-
-// We set headers, cookies and more information from the web request
-$flowData->evidence->setFromWebRequest();
-
-// Now we process the flowData
-$result = $flowData->process();
-
-// First we check if the property we're looking for has a meaningful result
-
-if($result->device->hardwarename->hasValue){
-
-    // This should be a list of devices
-
-    var_dump($result->device->hardwarename->value);
-
-} else {
-
-    // If it doesn't have a meaningful result, we echo out the reason why 
-    // it wasn't meaningful
-
-    echo($result->device->ismobile->noValueMessage);
-
+// Create your own recource key for free at https://configure.51degrees.com. 
+$resourceKey = "!!YOUR_RESOURCE_KEY!!";
+// Check if there is a resource key in the enviornemnt variable and use
+// it if there is one.
+$envKey = getenv("RESOURCEKEY");
+if($envKey !== false){
+    $resourceKey = $envKey;
 }
 
-// We get any JavaScript that should be placed in the page and run it, this 
-// will set cookies and other information allowing us to access extra 
-// properties such as device->screenpixelwidth.
+if(substr($resourceKey, 0, 2) == "!!") {
+    echo "You need to create a resource key at " .
+        "https://configure.51degrees.com and paste it into the code, " .
+        "replacing !!YOUR_RESOURCE_KEY!!.";
+    echo "</br>";
+    echo "Make sure to include the IsMobile, ScreenPixelWidth and " .
+        "and HardwareName properties as they are used by this example.";
+}
+else 
+{
+    $builder = new deviceDetectionPipelineBuilder(array(
+        "resourceKey" => $resourceKey,
+    ));
 
-echo "<script>" . $flowData->javascriptbuilder->javascript . "</script>";
+    // Next we build the pipeline. We could additionally add extra engines and/or
+    // flowElements here before building.
+    $pipeline = $builder->build();
+
+    // We create the flowData object that is used to add evidence to and read
+    // data from 
+    $flowData = $pipeline->createFlowData();
+
+    // We set headers, cookies and more information from the web request
+    $flowData->evidence->setFromWebRequest();
+
+    // Now we process the flowData
+    $result = $flowData->process();
+
+    // First we check if the property we're looking for has a meaningful result
+
+    if($result->device->hardwarename->hasValue){
+
+        // This should be a list of devices
+
+        var_dump($result->device->hardwarename->value);
+
+    } else {
+
+        // If it doesn't have a meaningful result, we echo out the reason why 
+        // it wasn't meaningful
+
+        echo($result->device->ismobile->noValueMessage);
+
+    }
+
+    // We get any JavaScript that should be placed in the page and run it, this 
+    // will set cookies and other information allowing us to access extra 
+    // properties such as device->screenpixelwidth.
+
+    echo "<script>" . $flowData->javascriptbuilder->javascript . "</script>";
+}

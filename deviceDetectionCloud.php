@@ -63,7 +63,7 @@ class deviceDetectionCloud extends engine {
 
             foreach ($cloudData["device"] as $key => $value){
 
-                if(isset($cloudData["device"][$key . "nullreason"]){
+                if(isset($cloudData["device"][$key . "nullreason"])){
                     
                     $result[$key] = new aspectPropertyValue($cloudData["device"][$key . "nullreason"]);
 

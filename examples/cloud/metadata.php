@@ -35,71 +35,88 @@
 require(__DIR__ . "/../../vendor/autoload.php");
 use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
 
-// Then create a pipeline with the builder. Create your own recource key for 
-// free at https://configure.51degrees.com. 
-// To access paid-for properties, you will also need to enter your license key.
+// Create your own recource key for free at https://configure.51degrees.com
+// then enter it here. 
+$resourceKey = "!!YOUR_RESOURCE_KEY!!";
+// Check if there is a resource key in the enviornemnt variable and use
+// it if there is one.
+$envKey = getenv("RESOURCEKEY");
+if($envKey !== false){
+    $resourceKey = $envKey;
+}
 
-$builder = new deviceDetectionPipelineBuilder(array(
-    "resourceKey" => "",
-    "restrictedProperties" => array() // All properties by default
-));
+if(substr($resourceKey, 0, 2) == "!!") {
+    echo "You need to create a resource key at " .
+        "https://configure.51degrees.com and paste it into the code, " .
+        "replacing !!YOUR_RESOURCE_KEY!!.";
+    echo "</br>";
+    echo "Make sure to include properties in the 'supported media' category " .
+        "as they are used by this example.";
+}
+else 
+{
+    $builder = new deviceDetectionPipelineBuilder(array(
+        "resourceKey" => $resourceKey,
+        "restrictedProperties" => array() // All properties by default
+    ));
 
-// Next build the pipeline. You could additionally add extra engines and/or
-// flowElements here before building.
-$pipeline = $builder->build();
+    // Next build the pipeline. You could additionally add extra engines and/or
+    // flowElements here before building.
+    $pipeline = $builder->build();
 
-// Get a list of all the properties for an engine including categories, 
-// types and descriptions
-$properties = $pipeline->getElement("device")->getProperties();
+    // Get a list of all the properties for an engine including categories, 
+    // types and descriptions
+    $properties = $pipeline->getElement("device")->getProperties();
 
-// Here we create a function that checks if a supplied user agent is a 
-// mobile device, the pipeline can be reused multiple times but a flowData 
-// objects it creates can only be processed once
-function checkBrowserSupport($userAgent, $pipeline) {
+    // Here we create a function that checks if a supplied user agent is a 
+    // mobile device, the pipeline can be reused multiple times but a flowData 
+    // objects it creates can only be processed once
+    function checkBrowserSupport($userAgent, $pipeline) {
 
-    // We create the flowData object that is used to add evidence to and 
-    // read data from 
-    $flowData = $pipeline->createFlowData();
+        // We create the flowData object that is used to add evidence to and 
+        // read data from 
+        $flowData = $pipeline->createFlowData();
 
-    // We set the user agent
-    $flowData->evidence->set("header.user-agent", $userAgent);
+        // We set the user agent
+        $flowData->evidence->set("header.user-agent", $userAgent);
 
-    // Now we process the flowData
-    $result = $flowData->process();
+        // Now we process the flowData
+        $result = $flowData->process();
 
-    // We use getWhere to find all the properties of a certain category 
-    // and fetch their values
-    $supported = $flowData->getWhere("category", "Supported Media");
+        // We use getWhere to find all the properties of a certain category 
+        // and fetch their values
+        $supported = $flowData->getWhere("category", "Supported Media");
 
-    foreach ($supported as $key => $value){
+        foreach ($supported as $key => $value){
 
-        echo "Does user agent " . $userAgent . " support ". $key . "?";
+            echo "Does user agent " . $userAgent . " support ". $key . "?";
 
-        // First we check if the property we're looking for has a meaningful 
-        // result (see the failureToMatch example for more information)
+            // First we check if the property we're looking for has a meaningful 
+            // result (see the failureToMatch example for more information)
 
-        if($result->device->ismobile->hasValue){
+            if($result->device->ismobile->hasValue){
 
-            var_dump($result->device->ismobile->value);
+                var_dump($result->device->ismobile->value);
 
-        } else {
+            } else {
 
-            // If it doesn't have a meaningful result, we echo out the 
-            // reason why it wasn't meaningful
-            echo $result->device->ismobile->noValueMessage;
+                // If it doesn't have a meaningful result, we echo out the 
+                // reason why it wasn't meaningful
+                echo $result->device->ismobile->noValueMessage;
+
+            }
 
         }
 
-    }
+    };
 
-};
+    // Some example User Agents to test
 
-// Some example User Agents to test
+    $desktopUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36';
+    $iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
 
-$desktopUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36';
-$iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
-
-// Run the function multiple times, creating a new flowData from the pipeline 
-// each time
-checkBrowserSupport($desktopUA, $pipeline);
-checkBrowserSupport($iPhoneUA, $pipeline);
+    // Run the function multiple times, creating a new flowData from the pipeline 
+    // each time
+    checkBrowserSupport($desktopUA, $pipeline);
+    checkBrowserSupport($iPhoneUA, $pipeline);
+}

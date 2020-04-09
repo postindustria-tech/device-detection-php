@@ -1,7 +1,10 @@
 <phpunit>
+  <php>
+    <env name="RESOURCEKEY" value="AQS5HKcyeoQOeT-C10g"/>
+  </php>
   <testsuites>
     <testsuite name="Tests">
-      <file>tests/examples.php</file>
+      <file>tests/devicedetection.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

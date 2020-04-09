@@ -31,7 +31,6 @@
     "require": {
         "51degrees/fiftyone.pipeline.core": "@dev",
         "51degrees/fiftyone.pipeline.engines": "@dev",
-        "51degrees/fiftyone.pipeline.cloudrequestengine": "@dev",
-        "51degrees/fiftyone.pipeline.javascriptbundler": "@dev"
+        "51degrees/fiftyone.pipeline.cloudrequestengine": "@dev"
     }
 }
