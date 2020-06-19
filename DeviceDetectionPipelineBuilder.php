@@ -4,7 +4,7 @@
  * Copyright 2019 51 Degrees Mobile Experts Limited, 5 Charlotte Close,
  * Caversham, Reading, Berkshire, United Kingdom RG4 7BY.
  *
- * This Original Work is licensed under the European Union Public Licence (EUPL) 
+ * This Original Work is licensed under the European Union Public Licence (EUPL)
  * v.1.2 and is subject to its terms as set out below.
  *
  * If a copy of the EUPL was not distributed with this file, You can obtain
@@ -14,10 +14,10 @@
  * amended by the European Commission) shall be deemed incompatible for
  * the purposes of the Work and the provisions of the compatibility
  * clause in Article 5 of the EUPL shall not apply.
- * 
- * If using the Work as, or as part of, a network application, by 
+ *
+ * If using the Work as, or as part of, a network application, by
  * including the attribution notice(s) required under Article 5 of the EUPL
- * in the end user terms of the application under an appropriate heading, 
+ * in the end user terms of the application under an appropriate heading,
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
@@ -25,50 +25,44 @@
 
 namespace fiftyone\pipeline\devicedetection;
 
-use fiftyone\pipeline\core\pipelineBuilder;
-use fiftyone\pipeline\core\pipeline;
-use fiftyone\pipeline\cloudrequestengine\cloudRequestEngine;
-use fiftyone\pipeline\devicedetection\deviceDetectionCloud;
+use fiftyone\pipeline\core\PipelineBuilder;
+use fiftyone\pipeline\cloudrequestengine\CloudRequestEngine;
+use fiftyone\pipeline\devicedetection\DeviceDetectionCloud;
 
-class deviceDetectionPipelineBuilder extends pipelineBuilder {
-
+/**
+* Extension of pipelineBuilder class that allows for the quick generation of a device detection pipeline.
+*
+*/
+class DeviceDetectionPipelineBuilder extends PipelineBuilder
+{
     public $restrictedProperties;
     public $cache;
     public $resourceKey;
     public $licenseKey;
 
-    public function __construct($settings){
+    /**
+     * @param {Array} options
+     * @param {String} options.resourceKey
+     * @param {String} options.cloudEndPoint custom endpoint for the cloud service
+     * @param {Array} options.restrictedProperties (list of properties to restrict the results to)
 
+    **/
+    public function __construct($settings)
+    {
         parent::__construct($settings);
 
         // Add cloudrequestEngine
 
-        $cloud = new cloudRequestEngine();
-
-        if(isset($settings["licenseKey"])){
-
-            $cloud->setLicenseKey($settings["licenseKey"]);
-
-        }
-
-        $cloud->setResourceKey($settings["resourceKey"]);
-
-        $cloud->baseURL = "https://cloud.51degrees.com/api/v4/";
-
-        if(isset($settings["cloudEndPoint"])){
-            $cloud->baseURL = $settings["cloudEndPoint"];
-        }
+        $cloud = new CloudRequestEngine($settings);
 
         $flowElements = [];
 
         $flowElements[] = $cloud;
 
-        $deviceDetection = new deviceDetectionCloud();
+        $deviceDetection = new DeviceDetectionCloud();
 
-        if(isset($settings["restrictedProperties"])){
-
+        if (isset($settings["restrictedProperties"])) {
             $deviceDetection->setRestrictedProperties = $settings["restrictedProperties"];
-
         }
 
         $flowElements[] = $deviceDetection;
@@ -78,7 +72,5 @@ class deviceDetectionPipelineBuilder extends pipelineBuilder {
         $flowElements = array_merge($flowElements, $this->flowElements);
                 
         $this->flowElements = $flowElements;
-
     }
-
 };

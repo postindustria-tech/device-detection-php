@@ -4,7 +4,7 @@
  * Copyright 2019 51 Degrees Mobile Experts Limited, 5 Charlotte Close,
  * Caversham, Reading, Berkshire, United Kingdom RG4 7BY.
  *
- * This Original Work is licensed under the European Union Public Licence (EUPL) 
+ * This Original Work is licensed under the European Union Public Licence (EUPL)
  * v.1.2 and is subject to its terms as set out below.
  *
  * If a copy of the EUPL was not distributed with this file, You can obtain
@@ -14,88 +14,126 @@
  * amended by the European Commission) shall be deemed incompatible for
  * the purposes of the Work and the provisions of the compatibility
  * clause in Article 5 of the EUPL shall not apply.
- * 
- * If using the Work as, or as part of, a network application, by 
+ *
+ * If using the Work as, or as part of, a network application, by
  * including the attribution notice(s) required under Article 5 of the EUPL
- * in the end user terms of the application under an appropriate heading, 
+ * in the end user terms of the application under an appropriate heading,
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
-/**
- * @example cloud/configurefromfile.php
- * 
- * In this example we create a 51Degrees device detection pipeline from a 
- * JSON configuration file and use it to test if a device is a mobile device.
- *
-**/
 
-// First we include the deviceDetectionPipelineBuilder and other 
-// required engines
+/**
+* @example cloud/configureFromFile.php
+* This example shows how to configure a pipeline from a configuration file
+* using the pipelinebuilder's buildFromConfig method.
+*
+* This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-php/blob/master/examples/cloud/configurefromfile.php).
+* To run this example, you will need to create a **resource key**.
+* The resource key is used as short-hand to store the particular set of
+* properties you are interested in as well as any associated license keys
+* that entitle you to increased request limits and/or paid-for properties.
+* You can create a resource key using the 51Degrees [Configurator](https://configure.51degrees.com).
+* The configuration file used here is:
+*
+* ```
+* {
+*  "PipelineOptions": {
+*    "Elements": [
+*      {
+*        "BuilderName": "fiftyone\\pipeline\\cloudrequestengine\\CloudRequestEngine",
+*        "BuildParameters": {
+*          "resourceKey": "!!YOUR_RESOURCE_KEY!!"
+*        }
+*      },
+*      {
+*        "BuilderName": "fiftyone\\pipeline\\devicedetection\\DeviceDetectionCloud"
+*      }
+*    ]
+*  }
+*}
+*
+* ```
+*
+* ```
+* Expected output:
+* Is User-Agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36' a mobile device?:
+* No
+* 
+* Is User-Agent 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114' a mobile device?:
+* Yes
+* ```
+ */
 
 require(__DIR__ . "/../../vendor/autoload.php");
 
-use fiftyone\pipeline\devicedetection\deviceDetectionCloud;
-use fiftyone\pipeline\core\pipelineBuilder;
-use fiftyone\pipeline\cloudrequestengine\cloudRequestEngine;
+use fiftyone\pipeline\core\PipelineBuilder;
 
-// We create a simple pipeline to access the engine in a JSON file
-$builder = new pipelineBuilder();
-$pipeline = $builder->buildFromConfig("./pipeline.json");
+// We create a pipeline to access the engine via a JSON configuration file
+$builder = new PipelineBuilder();
 
-// The JSON file used here is
+$configFile = __DIR__ . "/pipeline.json";
 
-// {
-//     "PipelineOptions": {
-//       "Elements": [
-//         {
-//           "BuilderName": "fiftyone\\pipeline\\cloudrequestengine\\cloudRequestEngine",
-//           "BuildParameters": {
-//             "resourceKey": "Obtain a resource key from https://configure.51degrees.com"
-//           }
-//         },
-//         {
-//           "BuilderName": "fiftyone\\pipeline\\devicedetection\\deviceDetectionCloud"
-//         },
-//         {
-//           "BuilderName": "fiftyone\\pipeline\\javascriptbundler\\javaScriptBundlerElement"
-//         }
-//       ]
-//     }
-//   }
+if (!file_exists($configFile)) {
+    echo "Config file not found at " . $configFile;
+    return;
+}
+
+// Check if config file resource key has been filled in
+
+$configFileJSON = json_decode(file_get_contents($configFile), true);
+
+if ($configFileJSON["PipelineOptions"]["Elements"][0]["BuildParameters"]["resourceKey"] === "!!YOUR_RESOURCE_KEY!!") {
+    echo "You need to create a resource key at " .
+    "https://configure.51degrees.com and paste it into your config file, " .
+    "replacing !!YOUR_RESOURCE_KEY!!.";
+    echo "\n<br/>";
+    echo "Make sure to include the ismobile property " .
+    "as it is used by this example.\n<br />";
+    return;
+}
+
+$pipeline = $builder->buildFromConfig($configFile);
 
 // Next we build the pipeline. We could additionally add extra engines and/or
 // flowElements here before building.
+
 $pipeline = $builder->build();
 
-// We create the flowData object that is used to add evidence to and read 
-// data from 
-$flowData = $pipeline->createFlowData();
+// We make a function for checking if a User-Agent is a mobile device
 
-// We set headers, cookies and more information from the web request
-$flowData->evidence->setFromWebRequest();
+function configurefromfile_checkifmobile($pipeline, $userAgent = "")
+{
 
-// Now we process the flowData
-$result = $flowData->process();
+    // We create the flowData object that is used to add evidence to and read data from
+    $flowData = $pipeline->createFlowData();
 
-// First we check if the property we're looking for has a meaningful result
+    // Add the User-Agent as evidence
+    $flowData->evidence->set("header.user-agent", $userAgent);
 
-if($result->device->ismobile->hasValue){
+    // Now we process the flowData
+    $result = $flowData->process();
 
-    var_dump($result->device->ismobile->value);
+    // First we check if the property we're looking for has a meaningful result
+    print("Is User-Agent '<b>" . $userAgent . "</b>' a mobile device?:");
+    print("</br>\n");
 
-} else {
+    if ($result->device->ismobile->hasValue) {
+        if ($result->device->ismobile->value) {
+            print("Yes");
+        } else {
+            print("No");
+        }
+    } else {
+        // If it doesn't have a meaningful result, we echo out the reason why
+        // it wasn't meaningful
+        print($result->device->ismobile->noValueMessage);
+    }
 
-    // If it doesn't have a meaningful result, we echo out the reason why 
-    // it wasn't meaningful
-
-    echo($result->device->ismobile->noValueMessage);
-
+    print("</br>\n");
+    print("</br>\n");
 }
 
-// We get any JavaScript that should be placed in the page and run it, 
-// this will set cookies and other information allowing us to access extra 
-// properties such as device->screenpixelwidth.
+$desktopUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36';
+$iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
 
-echo "<script>" . $flowData->javascriptbundler->javascript . "</script>";
-
-
-
+configurefromfile_checkifmobile($pipeline, $desktopUA);
+configurefromfile_checkifmobile($pipeline, $iPhoneUA);

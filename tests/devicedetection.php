@@ -4,7 +4,7 @@
  * Copyright 2019 51 Degrees Mobile Experts Limited, 5 Charlotte Close,
  * Caversham, Reading, Berkshire, United Kingdom RG4 7BY.
  *
- * This Original Work is licensed under the European Union Public Licence (EUPL) 
+ * This Original Work is licensed under the European Union Public Licence (EUPL)
  * v.1.2 and is subject to its terms as set out below.
  *
  * If a copy of the EUPL was not distributed with this file, You can obtain
@@ -14,10 +14,10 @@
  * amended by the European Commission) shall be deemed incompatible for
  * the purposes of the Work and the provisions of the compatibility
  * clause in Article 5 of the EUPL shall not apply.
- * 
- * If using the Work as, or as part of, a network application, by 
+ *
+ * If using the Work as, or as part of, a network application, by
  * including the attribution notice(s) required under Article 5 of the EUPL
- * in the end user terms of the application under an appropriate heading, 
+ * in the end user terms of the application under an appropriate heading,
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
@@ -29,15 +29,29 @@ require(__DIR__ . "/../vendor/autoload.php");
 $_SERVER["REMOTE_ADDR"] = "0.0.0.0";
 
 use PHPUnit\Framework\TestCase;
-use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
+use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
 
-class exampleTests extends TestCase
+class ExampleTests extends TestCase
 {
+    private function getResourceKey() {
+
+        $resourceKey = $_ENV["RESOURCEKEY"];
+
+        if ($resourceKey === "!!YOUR_RESOURCE_KEY!!") {
+            $this->fail("You need to create a resource key at " .
+            "https://configure.51degrees.com and paste it into the " .
+            "phpunit.xml config file, " .
+            "replacing !!YOUR_RESOURCE_KEY!!.");
+        }
+
+        return $resourceKey;
+
+    }
 
     public function testPropertyValueBad()
-	{
-        $builder1 = new deviceDetectionPipelineBuilder(array(
-            "resourceKey" => $_ENV["RESOURCEKEY"]
+    {
+        $builder1 = new DeviceDetectionPipelineBuilder(array(
+            "resourceKey" => $this->getResourceKey()
         ));
 
         $badUA = 'w5higsnrg';
@@ -50,16 +64,17 @@ class exampleTests extends TestCase
 
         $result = $flowData1->process();
         
-		$this->assertFalse($result->device->ismobile->hasValue);
-        $this->assertEquals($result->device->ismobile->noValueMessage, 
-            "The results contained a null profile for the component which the required property belongs to.");
+        $this->assertFalse($result->device->ismobile->hasValue);
+        $this->assertEquals(
+            $result->device->ismobile->noValueMessage,
+            "The results contained a null profile for the component which the required property belongs to."
+        );
     }
 
     public function testPropertyValueGood()
-	{
-
-        $builder = new deviceDetectionPipelineBuilder(array(
-            "resourceKey" => $_ENV["RESOURCEKEY"]
+    {
+        $builder = new DeviceDetectionPipelineBuilder(array(
+            "resourceKey" => $this->getResourceKey()
         ));
 
         $iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
@@ -72,15 +87,13 @@ class exampleTests extends TestCase
 
         $result = $flowData->process();
         
-		$this->assertTrue($result->device->ismobile->value);
-
+        $this->assertTrue($result->device->ismobile->value);
     }
 
     public function testGetProperties()
-	{
-
-        $builder = new deviceDetectionPipelineBuilder(array(
-            "resourceKey" => $_ENV["RESOURCEKEY"]
+    {
+        $builder = new DeviceDetectionPipelineBuilder(array(
+            "resourceKey" => $this->getResourceKey()
         ));
 
         $iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
@@ -91,50 +104,38 @@ class exampleTests extends TestCase
 
         $flowData->evidence->set("header.user-agent", $iPhoneUA);
 
-        $result = $flowData->process();
-
         $properties = $pipeline->getElement("device")->getProperties();
 
-		$this->assertEquals($properties["ismobile"]["Name"], "IsMobile");
-		$this->assertEquals($properties["ismobile"]["Type"], "Boolean");
-		$this->assertEquals($properties["ismobile"]["Category"], "Device");
-        
+        $this->assertEquals($properties["ismobile"]["name"], "IsMobile");
+        $this->assertEquals($properties["ismobile"]["type"], "Boolean");
+        $this->assertEquals($properties["ismobile"]["category"], "Device");
     }
 
     public function testFailureToMatch()
-	{
-
+    {
         include __DIR__ . "/../examples/cloud/failureToMatch.php";
 
-		$this->assertTrue(true);
-
+        $this->assertTrue(true);
     }
 
-	public function testGettingStarted()
-	{
-
+    public function testGettingStarted()
+    {
         include __DIR__ . "/../examples/cloud/gettingstarted.php";
         
         $this->assertTrue(true);
-
     }
     
     public function testMetaData()
-	{
-
+    {
         include __DIR__ . "/../examples/cloud/metadata.php";
         
         $this->assertTrue(true);
-
     }
     
     public function testWebIntegration()
-	{
-
+    {
         include __DIR__ . "/../examples/cloud/webIntegration.php";
         
         $this->assertTrue(true);
-
-	}
-
+    }
 }

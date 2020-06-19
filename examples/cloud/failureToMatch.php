@@ -4,7 +4,7 @@
  * Copyright 2019 51 Degrees Mobile Experts Limited, 5 Charlotte Close,
  * Caversham, Reading, Berkshire, United Kingdom RG4 7BY.
  *
- * This Original Work is licensed under the European Union Public Licence (EUPL) 
+ * This Original Work is licensed under the European Union Public Licence (EUPL)
  * v.1.2 and is subject to its terms as set out below.
  *
  * If a copy of the EUPL was not distributed with this file, You can obtain
@@ -14,105 +14,124 @@
  * amended by the European Commission) shall be deemed incompatible for
  * the purposes of the Work and the provisions of the compatibility
  * clause in Article 5 of the EUPL shall not apply.
- * 
- * If using the Work as, or as part of, a network application, by 
+ *
+ * If using the Work as, or as part of, a network application, by
  * including the attribution notice(s) required under Article 5 of the EUPL
- * in the end user terms of the application under an appropriate heading, 
+ * in the end user terms of the application under an appropriate heading,
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/**
+/*
  * @example cloud/failureToMatch.php
- * 
- * This examples shows how the hasValue function can help make sure that
- * meaningful values are returned when checking properties returned from 
- * the device detection engine.
  *
-**/
+ * This example shows how the hasValue function can help make sure
+ * that meaningful values * are returned when checking properties
+ * returned from the device detection engine.
+ *
+ * This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-php/blob/master/examples/cloud/failureToMatch.php).
+ *
+ * To run this example, you will need to create a **resource key**.
+ * The resource key is used as short-hand to store the particular set of
+ * properties you are interested in as well as any associated license keys
+ * that entitle you to increased request limits and/or paid-for properties.
+ * You can create a resource key using the 51Degrees [Configurator](https://configure.51degrees.com).
+ *
+ * Expected output:
+ *
+ * ```
+ * Does User-Agent 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114' represent a mobile device?:
+ * Yes
+ * 
+ * Does User-Agent 'xyfga' represent a mobile device?:
+ * We don't know for sure. The reason given is:
+ * No matching entries could be found for the supplied evidence.
+ * This is because the supplied User-Agent cannot be mapped to any known device.
+ * ```
+*/
 
 // First we include the deviceDetectionPipelineBuilder
 
 require(__DIR__ . "/../../vendor/autoload.php");
-use fiftyone\pipeline\devicedetection\deviceDetectionPipelineBuilder;
 
-// We then create a pipeline with the builder. To access properties other than 
-// IsMobile, create your own recource key for free at https://configure.51degrees.com. 
-// To access paid-for properties, you will also need to enter your license key.
-$resourceKey = "!!YOUR_RESOURCE_KEY!!";
-// Check if there is a resource key in the enviornemnt variable and use
-// it if there is one.
-$envKey = getenv("RESOURCEKEY");
-if($envKey !== false){
-    $resourceKey = $envKey;
+use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+
+// We then create a pipeline with the builder. Create your own resource key for free at https://configure.51degrees.com.
+
+// Check if there is a resource key in the environment variable and use
+// it if there is one. You will need to switch this for your own resource key.
+
+if (isset($_ENV["RESOURCEKEY"])) {
+    $resourceKey = $_ENV["RESOURCEKEY"];
+} else {
+    $resourceKey = "!!YOUR_RESOURCE_KEY!!";
 }
 
-if(substr($resourceKey, 0, 2) == "!!") {
+if ($resourceKey === "!!YOUR_RESOURCE_KEY!!") {
     echo "You need to create a resource key at " .
         "https://configure.51degrees.com and paste it into the code, " .
         "replacing !!YOUR_RESOURCE_KEY!!.";
-    echo "</br>";
+    echo "\n<br/>";
     echo "Make sure to include the ismobile property " .
-        "as it is used by this example.";
+        "as it is used by this example.\n<br />";
+    return;
 }
-else 
+
+$builder = new DeviceDetectionPipelineBuilder(array(
+    "resourceKey" => $resourceKey,
+    "restrictedProperties" => array() // All properties by default
+));
+
+// Next we build the pipeline. We could additionally add extra engines and/or
+// flowElements here before building.
+$pipeline = $builder->build();
+
+// Here we create a function that checks if a supplied User-Agent is a
+// mobile device
+
+function failuretomatch_checkifmobile($pipeline, $userAgent = "")
 {
-    $builder = new deviceDetectionPipelineBuilder(array(
-        "resourceKey" => $resourceKey,
-        "restrictedProperties" => array() // All properties by default
-    ));
 
-    // Next we build the pipeline. We could additionally add extra engines and/or
-    // flowElements here before building.
-    $pipeline = $builder->build();
+    // We create the flowData object that is used to add evidence to and read data from
+    $flowData = $pipeline->createFlowData();
 
-    // Here we create a function that checks if a supplied user agent is a 
-    // mobile device
+    // Add the User-Agent as evidence
 
-    if(!function_exists("checkIfMobile")){
+    $flowData->evidence->set("header.user-agent", $userAgent);
 
-        function checkIfMobile($userAgent, $pipeline) {
+    // Now we process the flowData
+    $result = $flowData->process();
 
-            // We create the flowData object that is used to add evidence to and
-            // read data from 
-            $flowData = $pipeline->createFlowData();
+    // First we check if the property we're looking for has a meaningful result
 
-            // We set the user agent
-            $flowData->evidence->set("header.user-agent", $userAgent);
+    print("Does User-Agent '<b>" . $userAgent . "</b>' represent a mobile device?:");
+    print("</br>\n");
 
-            // Now we process the flowData
-            $result = $flowData->process();
-
-            echo "Is user agent " . $userAgent . " a mobile device? \n";
-
-            // First we check if the property we're looking for has a meaningful result
-
-            if($result->device->ismobile->hasValue){
-
-                var_dump($result->device->ismobile->value);
-
-            } else {
-
-                // If it doesn't have a meaningful result, we echo out the reason 
-                // why it wasn't meaningful
-
-                echo($result->device->ismobile->noValueMessage);
-
-            }
-
-
-        };
-
+    if ($result->device->ismobile->hasValue) {
+        if ($result->device->ismobile->value) {
+            print("Yes");
+        } else {
+            print("No");
+        }
+    } else {
+        print("We don't know for sure. The reason given is:");
+        print("</br>\n");
+        // If it doesn't have a meaningful result, we echo out the reason why
+        // it wasn't meaningful
+        print($result->device->ismobile->noValueMessage);
+        print("</br>\n");
+        print("This is because the supplied User-Agent cannot be " .
+            "mapped to any known device.");
     }
 
-    // Some example User Agents to test
-
-    $iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
-    checkIfMobile($iPhoneUA, $pipeline);
-    // This User-Agent is from an iPhone. It should match correctly and be 
-    // identified as a mobile device
-
-    $modifiediPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 99_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
-    checkIfMobile($modifiediPhoneUA, $pipeline);
-    // This User-Agent is from an iPhone but has been modified so it doesn't 
-    // match exactly.
+    print("</br>\n");
+    print("</br>\n");
 }
+
+
+// Some example User-Agents to test
+
+$iPhoneUA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2 like Mac OS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C114';
+failuretomatch_checkifmobile($pipeline, $iPhoneUA);
+
+$badUserAgent = 'xyfga';
+failuretomatch_checkifmobile($pipeline, $badUserAgent);
