@@ -89,7 +89,19 @@ $builder = new DeviceDetectionPipelineBuilder(array(
 
 // Next we build the pipeline. We could additionally add extra engines and/or
 // flowElements here before building.
-$pipeline = $builder->build();
+
+// To stop having to construct the pipeline
+// and re-make cloud API requests used during construction on every page load,
+// we recommend caching the serialized pipeline to a database or disk.
+// Below we are using PHP's serialize and writing to a file if it doesn't exist
+
+$serializedPipelineFile = __DIR__ . "metadata_pipeline.pipeline";
+if(!file_exists($serializedPipelineFile)){
+    $pipeline = $builder->build();
+    file_put_contents($serializedPipelineFile, serialize($pipeline));
+} else {
+    $pipeline = unserialize(file_get_contents($serializedPipelineFile));
+}
 
 // Show all the properties in the device element
 echo "Properties returned when making requests with this resource key:";
