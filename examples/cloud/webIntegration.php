@@ -54,7 +54,7 @@ use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
 if (isset($_ENV["RESOURCEKEY"])) {
     $resourceKey = $_ENV["RESOURCEKEY"];
 } else {
-    $resourceKey = "AQQNX4pFKLImbC0U2Eg";
+    $resourceKey = "!!YOUR_RESOURCE_KEY!!";
 }
 
 if (substr($resourceKey, 0, 2) === "!!") {
@@ -84,7 +84,19 @@ $builder = new DeviceDetectionPipelineBuilder(array(
 
 // Next we build the pipeline. We could additionally add extra engines and/or
 // flowElements here before building.
-$pipeline = $builder->build();
+
+// To stop having to construct the pipeline
+// and re-make cloud API requests used during construction on every page load,
+// we recommend caching the serialized pipeline to a database or disk.
+// Below we are using PHP's serialize and writing to a file if it doesn't exist
+
+$serializedPipelineFile = __DIR__ . "web_integration_pipeline.pipeline";
+if(!file_exists($serializedPipelineFile)){
+    $pipeline = $builder->build();
+    file_put_contents($serializedPipelineFile, serialize($pipeline));
+} else {
+    $pipeline = unserialize(file_get_contents($serializedPipelineFile));
+}
 
 // We create the flowData object that is used to add evidence to and read
 // data from
