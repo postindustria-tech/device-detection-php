@@ -25,7 +25,8 @@
   "autoload": {
     "classmap": [
       "DeviceDetectionCloud.php",
-      "DeviceDetectionPipelineBuilder.php"
+      "DeviceDetectionPipelineBuilder.php",
+      "HardwareProfileCloud.php"
     ]
   },
   "require": {
