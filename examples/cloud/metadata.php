@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/metadata.php
  * This example shows how to get properties from a pipeline's processed flowData based on * their metadata and the getProperties() method.
  *
