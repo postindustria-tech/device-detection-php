@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/nativeModelLookup.php
  *
  * This example finds the details of devices from the 'native model name'.
@@ -38,10 +38,10 @@
  * You can create a resource key using the 51Degrees [Configurator](https://configure.51degrees.com).
  *
  * Expected output:
- *
+ * ```
  * Which devices are associated with the native model: SC-03L?: Samsung Galaxy S10 SC-03L
- *
-*/
+ * ```
+ */
 
 require(__DIR__ . "/../../vendor/autoload.php");
 
