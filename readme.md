@@ -2,7 +2,7 @@
 
 ![51Degrees](https://51degrees.com/DesktopModules/FiftyOne/Distributor/Logo.ashx?utm_source=github&utm_medium=repository&utm_content=readme_main&utm_campaign=php-open-source "Data rewards the curious") **PHP Device Detection**
 
-[Developer Documentation](https://docs.51degrees.com?utm_source=github&utm_medium=repository&utm_content=documentation&utm_campaign=php-open-source "developer documentation")
+[Developer Documentation](https://51degrees.com/documentation/4.1/index.html?utm_source=github&utm_medium=repository&utm_content=documentation&utm_campaign=php-open-source "developer documentation")
 
 ## Introduction
 This project contains the source code for the PHP implementation of 51Degrees' cloud-based device detection engine for use with the [Pipeline API](https://github.com/51Degrees/pipeline-php-core).
@@ -16,7 +16,6 @@ Navigate to the repository root and execute:
 ```
 composer install
 ```
-
 This will create the vendor directory containing autoload.php. 
 Now navigate to the examples directory and start a PHP server with the relevant file. For example:
 
@@ -39,7 +38,6 @@ phpunit --log-junit test-results.xml
 The on-premise implementation of device detection is much faster but requires more memory and processing power than the cloud version.
 Unfortunately, distributing the on-premise package via composer would require the inclusion of binary executables (.so/.dll) that are not permitted.
 If you wish to use the on-premise version then you will need to clone the [on-premise repository](https://github.com/51Degrees/device-detection-php-onpremise) and follow the instructions in the readme to build the required modules. This is a fairly involved process so feel free to [contact us](mailto:support@51degrees.com) if you are having difficulties.
-
 
 ## Development
 
