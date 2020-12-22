@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/webIntegration.php
  *
  * This example demonstrates the evidence->setFromWebRequest() method

@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/failureToMatch.php
  *
  * This example shows how the hasValue function can help make sure

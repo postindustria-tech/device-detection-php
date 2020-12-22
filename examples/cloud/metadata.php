@@ -21,17 +21,13 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/metadata.php
- * This example shows how to get properties from a pipeline's processed flowData based on * their metadata and the getProperties() method.
+ * @include{doc} example-metadata-hash.txt
  *
- * This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-php/blob/master/examples/cloud/metadata.php).
+ * This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-php/blob/master/examples/cloud/matchMetrics.php).
  *
- * To run this example, you will need to create a **resource key**.
- * The resource key is used as short-hand to store the particular set of
- * properties you are interested in as well as any associated license keys
- * that entitle you to increased request limits and/or paid-for properties.
- * You can create a resource key using the 51Degrees [Configurator](https://configure.51degrees.com).
+ * @include{doc} example-require-datafile.txt
  *
  * Expected output
  * (Note that the exact list of properties will depend on the resource key)
