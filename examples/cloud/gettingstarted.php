@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/gettingStarted.php
  *
  * This example shows how a simple device detection pipeline can be built
