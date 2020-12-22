@@ -23,7 +23,7 @@ Now navigate to the examples directory and start a PHP server with the relevant 
 For example:
 
 ```
-PHP -S localhost:3000 cloud/gettingstarted.php
+php -S localhost:3000 cloud/gettingstarted.php
 ```
 
 This will start a local web server listening on port 3000. 
