@@ -21,7 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-/*
+/**
  * @example cloud/taclookup.php
  *
  * This example shows the details of devices associated with a given 'Type Allocation Code' or 'TAC'.
