@@ -2,7 +2,7 @@
 
 ![51Degrees](https://51degrees.com/DesktopModules/FiftyOne/Distributor/Logo.ashx?utm_source=github&utm_medium=repository&utm_content=readme_main&utm_campaign=php-open-source "Data rewards the curious") **PHP Device Detection**
 
-[Developer Documentation](https://51degrees.com/device-detection-php/4.2/index.html?utm_source=github&utm_medium=repository&utm_content=documentation&utm_campaign=php-open-source "developer documentation")
+[Developer Documentation](https://51degrees.com/device-detection-php/index.html?utm_source=github&utm_medium=repository&utm_content=documentation&utm_campaign=php-open-source "developer documentation")
 
 ## Introduction
 This project contains the source code for the PHP implementation of 51Degrees' 
@@ -38,6 +38,7 @@ phpunit --log-junit test-results.xml
 ```
 
 ## On-premise device detection
+
 The on-premise implementation of device detection is much faster but requires more 
 memory and processing power than the cloud version. Unfortunately, distributing the 
 on-premise package via composer would require the inclusion of binary executables (.so/.dll) 
