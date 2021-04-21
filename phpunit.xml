@@ -1,6 +1,7 @@
 <phpunit>
   <php>
-    <env name="RESOURCEKEY" value="!!YOUR_RESOURCE_KEY!!"/>
+    <env name="RESOURCEKEY" value="!!YOUR_RESOURCE_KEY!!" force="true"/>
+    <env name="FOD_CLOUD_API_URL" value="" force="true"/>
   </php>
   <testsuites>
     <testsuite name="Tests">
