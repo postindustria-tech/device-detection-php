@@ -48,6 +48,7 @@
 require(__DIR__ . "/../../vendor/autoload.php");
 
 use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+use fiftyone\pipeline\core\Utils;
 
 // Check if there is a resource key in the environment variable and use
 // it if there is one. (This is used for automated testing)
@@ -107,6 +108,13 @@ $flowData->evidence->setFromWebRequest();
 
 // Now we process the flowData
 $result = $flowData->process();
+
+// Some browsers require that extra HTTP headers are explicitly
+// requested. So set whatever headers are required by the browser in
+// order to return the evidence needed by the pipeline.
+// More info on this can be found at
+// https://51degrees.com/blog/user-agent-client-hints
+Utils::setResponseHeader($flowData);
 
 // Following the JavaScript bundler settings where we created an endpoint called
 // ?json, we now use this endpoint (if called) to send back JSON to the client side

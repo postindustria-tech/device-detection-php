@@ -29,9 +29,23 @@
       "HardwareProfileCloud.php"
     ]
   },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "pipeline-php-core"
+    },
+    {
+      "type": "path",
+      "url": "pipeline-php-engines"
+    },
+    {
+      "type": "path",
+      "url": "pipeline-php-cloudrequestengine"
+    }
+  ],
   "require": {
-    "51degrees/fiftyone.pipeline.core": "4.3.*",
-    "51degrees/fiftyone.pipeline.engines": "4.3.*",
-    "51degrees/fiftyone.pipeline.cloudrequestengine": "4.3.0"
+    "51degrees/fiftyone.pipeline.core": "@dev",
+    "51degrees/fiftyone.pipeline.engines": "@dev",
+    "51degrees/fiftyone.pipeline.cloudrequestengine": "@dev"
   }
 }
