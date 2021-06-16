@@ -119,7 +119,9 @@ class ExampleTests extends TestCase
     {
         $rows = 0;
         $expectedProperties = [];
-
+		
+		//TODO remove setheader properties from this list once UACH datafile is released.
+        $excludedProperties = ["setheaderbrowseraccept-ch", "setheaderplatformaccept-ch", "setheaderhardwareaccept-ch"];
         if (($handle = fopen($this->CSVDataFile, 'r')) !== FALSE)
         {
             while (($row = fgetcsv($handle, 5000, ",")) !== FALSE && $rows == 0) 
@@ -145,21 +147,25 @@ class ExampleTests extends TestCase
 
         foreach ($expectedProperties as &$property)
         {
-            $key = strtolower($property);
+			
+			$key = strtolower($property);
+				
+			if (!in_array($key, $excludedProperties)){
+				
+				$apv = $result->device->getInternal($key);
 
-            $apv = $result->device->getInternal($key);
+				$this->assertNotNull($apv, $key);
 
-            $this->assertNotNull($apv, $key);
-
-            if ($apv->hasValue) {
+				if ($apv->hasValue) {
 
                 $this->assertNotNull($apv->value, $key);
 
-            } else {
+				} else {
 
-                $this->assertNotNull($apv->noValueMessage, $key);
+					$this->assertNotNull($apv->noValueMessage, $key);
 
-            }
+				}
+			}
         }
     }
 
@@ -178,67 +184,73 @@ class ExampleTests extends TestCase
         $result = $flowData->process();
 
         $properties = $pipeline->getElement("device")->getProperties();
+		
+		//TODO remove setheader properties from this list once UACH datafile is released.
+        $excludedProperties = ["setheaderbrowseraccept-ch", "setheaderplatformaccept-ch", "setheaderhardwareaccept-ch"];
 
         foreach ($properties as &$property)
-        {
-            $key = strtolower($property["name"]);
+        {				
+			$key = strtolower($property["name"]);
+				
+			if (!in_array($key, $excludedProperties)){
+				
+				$apv = $result->device->getInternal($key);
 
-            $apv = $result->device->getInternal($key);
+				$expectedType = $property["type"];
+				
+				$this->assertNotNull($apv, $key);
 
-            $expectedType = $property["type"];
-            
-            $this->assertNotNull($apv, $key);
+				$value = $apv->value;
 
-            $value = $apv->value;
-
-            switch ($expectedType) {
-                case "Boolean":
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("boolean", $value, $key);
-                    } else {
-                        $this->assertIsBool($value, $key);
-                    }
-                    break;
-                case 'String':
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("string", $value, $key);
-                    } else {
-                        $this->assertIsString($value, $key);
-                    }
-                    break;
-                case 'JavaScript':
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("string", $value, $key);
-                    } else {
-                        $this->assertIsString($value, $key);
-                    }
-                    break;
-                case 'Int32':
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("integer", $value, $key);
-                    } else {
-                        $this->assertIsInt($value, $key);
-                    }
-                    break;
-                case 'Double':
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("double", $value, $key);
-                    } else {
-                        $this->assertIsFloat($value, $key);
-                    }
-                    break;
-                case 'Array':
-                    if (method_exists($this, 'assertInternalType')) {
-                        $this->assertInternalType("array", $value, $key);
-                    } else {
-                        $this->assertIsArray($value, $key);
-                    }
-                    break;
-                default:
-                    $this->fail("expected type for " . $key . " was " . $expectedType);
-                    break;
-            }
-        }
+				switch ($expectedType) {
+					case "Boolean":
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("boolean", $value, $key);
+						} else {
+							$this->assertIsBool($value, $key);
+						}
+						break;
+					case 'String':
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("string", $value, $key);
+						} else {
+							$this->assertIsString($value, $key);
+						}
+						break;
+					case 'JavaScript':
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("string", $value, $key);
+						} else {
+							$this->assertIsString($value, $key);
+						}
+						break;
+					case 'Int32':
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("integer", $value, $key);
+						} else {
+							$this->assertIsInt($value, $key);
+						}
+						break;
+					case 'Double':
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("double", $value, $key);
+						} else {
+							$this->assertIsFloat($value, $key);
+						}
+						break;
+					case 'Array':
+						if (method_exists($this, 'assertInternalType')) {
+							$this->assertInternalType("array", $value, $key);
+						} else {
+							$this->assertIsArray($value, $key);
+						}
+						break;
+					default:
+						$this->fail("expected type for " . $key . " was " . $expectedType);
+						break;
+				}
+			}
+	    }
     }
 
     public function testFailureToMatch()
@@ -265,6 +277,13 @@ class ExampleTests extends TestCase
     public function testWebIntegration()
     {
         include __DIR__ . "/../examples/cloud/webIntegration.php";
+        
+        $this->assertTrue(true);
+    }
+
+    public function testUserAgentClientHints()
+    {
+        include __DIR__ . "/../examples/cloud/userAgentClientHints.php";
         
         $this->assertTrue(true);
     }
