@@ -252,7 +252,56 @@ class ExampleTests extends TestCase
 			}
 	    }
     }
+    
+    public function providerCloudRequestOriginTestData() {
+        return array(
+            array('', true),
+            array('test.com', true),
+            array('51Degrees.com', false)
+        );
+    }
 
+    /**     
+     * Verify that making requests using a resource key that
+     * is limited to particular origins will fail or succeed
+     * in the expected scenarios. 
+     * This is an integration test that uses the live cloud service
+     * so any problems with that service could affect the result
+     * of this test.
+     * 
+     * @dataProvider providerCloudRequestOriginTestData
+     */
+    public function testCloudRequestOrigin($origin, $expectException)
+    {
+        $exception = false;
+
+        try {
+            $builder = new DeviceDetectionPipelineBuilder(array(
+                "resourceKey" => "AQS5HKcyVj6B8wNG2Ug",
+                "cloudRequestOrigin" => $origin
+            ));        
+
+            $pipeline = $builder->build();
+
+            $flowData = $pipeline->createFlowData();
+
+            $flowData->evidence->set("header.user-agent", $this->iPhoneUA);
+
+            $result = $flowData->process();
+
+        } catch (Exception $e) {
+
+            $exception = true;        
+
+            $expectedMessage = "This resource key is not authorized for use with domain: '" . $origin . "'.";
+
+            $this->assertTrue(strpos($e->getMessage(), $expectedMessage) !== false,
+                "Exception did not contain expected text (" . $e->getMessage() . ")");
+        }
+                
+        $this->assertEquals($expectException, $exception);
+    }
+/*
     public function testFailureToMatch()
     {
         include __DIR__ . "/../examples/cloud/failureToMatch.php";
@@ -286,5 +335,5 @@ class ExampleTests extends TestCase
         include __DIR__ . "/../examples/cloud/userAgentClientHints.php";
         
         $this->assertTrue(true);
-    }
+    }*/
 }

@@ -30,8 +30,8 @@
     ]
   },
   "require": {
-    "51degrees/fiftyone.pipeline.core": "4.3.*",
-    "51degrees/fiftyone.pipeline.engines": "4.3.*",
-    "51degrees/fiftyone.pipeline.cloudrequestengine": "4.3.0"
+    "51degrees/fiftyone.pipeline.core": "4.*",
+    "51degrees/fiftyone.pipeline.engines": "4.*",
+    "51degrees/fiftyone.pipeline.cloudrequestengine": "4.*"
   }
 }

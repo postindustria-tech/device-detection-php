@@ -8,7 +8,10 @@ parameters:
 # imageName: agent to run the stage on
 - name: buildType
 - name: imageName
- 
+- name: runTests
+  type: string
+  default: 'On'
+
 stages:
 
 # Get datafile stage, this datafile will be used in the test cases to get all the properties list.
@@ -16,6 +19,7 @@ stages:
   jobs:
   - job: Get_TAC_CSV_DataFile
     displayName: Get TAC CSV DataFile
+    condition: ne(${{ parameters.runTests }}, 'Off')
     
     pool:
       vmImage: ${{ parameters.imageName }}
@@ -50,6 +54,7 @@ stages:
   
   - job: Build_And_Test
     displayName: Build and Test
+    condition: ne(${{ parameters.runTests }}, 'Off')
 
     strategy:
       matrix:
