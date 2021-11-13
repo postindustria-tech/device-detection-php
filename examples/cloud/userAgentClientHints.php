@@ -77,8 +77,10 @@ use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
 if (isset($_ENV["RESOURCEKEY"])) {
     $resourceKey = $_ENV["RESOURCEKEY"];
 } else {
-    $resourceKey = "AQQNX4toW_gsWksK2Ug";
+    $resourceKey = "!!YOUR_RESOURCE_KEY!!";
 }
+
+
 
 if ($resourceKey === "!!YOUR_RESOURCE_KEY!!") {
     echo "You need to create a resource key at " .
