@@ -293,7 +293,7 @@ class ExampleTests extends TestCase
 
             $exception = true;        
 
-            $expectedMessage = "This resource key is not authorized for use with domain: '" . $origin . "'.";
+            $expectedMessage = "This Resource Key is not authorized for use with this domain: '" . $origin . "'.";
 
             $this->assertTrue(strpos($e->getMessage(), $expectedMessage) !== false,
                 "Exception did not contain expected text (" . $e->getMessage() . ")");
