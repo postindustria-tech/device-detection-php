@@ -67,7 +67,11 @@ use fiftyone\pipeline\core\Utils;
 
 if (isset($_ENV["RESOURCEKEY"])) {
     $resourceKey = $_ENV["RESOURCEKEY"];
-} else {
+} 
+else if (isset($_GET['RESOURCEKEY'])) {
+    $resourceKey = $_GET['RESOURCEKEY'];
+}
+else {
     $resourceKey = "!!YOUR_RESOURCE_KEY!!";
 }
 
