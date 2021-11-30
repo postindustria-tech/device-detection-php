@@ -166,6 +166,10 @@ stages:
     - script: |
         sed -i 's,.*name="RESOURCEKEY".*$,<env name="RESOURCEKEY" value="$(SuperResourceKey)" force="true"/>,' phpunit.xml
         sed -i 's,.*name="FOD_CLOUD_API_URL".*$,<env name="FOD_CLOUD_API_URL" value="$(FOD_CLOUD_API_URL)" force="true"/>,' phpunit.xml
+        sed -i 's,.*name="AcceptChPlatformKey".*$,<env name="AcceptChPlatformKey" value="$(AcceptChPlatformKey)" force="true"/>,' phpunit.xml
+        sed -i 's,.*name="AcceptChHardwareKey".*$,<env name="AcceptChHardwareKey" value="$(AcceptChHardwareKey)" force="true"/>,' phpunit.xml
+        sed -i 's,.*name="AcceptChBrowserKey".*$,<env name="AcceptChBrowserKey" value="$(AcceptChBrowserKey)" force="true"/>,' phpunit.xml
+        sed -i 's,.*name="AcceptChNoneKey".*$,<env name="AcceptChNoneKey" value="$(AcceptChNoneKey)" force="true"/>,' phpunit.xml
         cat phpunit.xml
       displayName: 'Set resource key and cloud endpoint'
       failOnStderr: true
@@ -173,7 +177,7 @@ stages:
     - script: |
         phpunit --log-junit test-results.xml
       displayName: 'Run tests with phpunit'
-      failOnStderr: true
+      failOnStderr: false
       
     # Publish Test Results to Azure Pipelines/TFS
     - task: PublishTestResults@2
