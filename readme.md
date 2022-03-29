@@ -26,6 +26,12 @@ For example:
 php -S localhost:3000 cloud/gettingstarted.php
 ```
 
+or to run in a terminal
+
+```
+php cloud/gettingstarted.php [your resource key]
+```
+
 This will start a local web server listening on port 3000. 
 Open your web browser and browse to http://localhost:3000/ to see the example in action.
 

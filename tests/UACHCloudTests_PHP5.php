@@ -137,11 +137,13 @@ class UACHCloudTests_PHP5 extends TestCase{
             $this->assertFalse(isset($responseHeaders['Accept-CH']));
         } 
         else 
-        {   $this->assertTrue(isset($responseHeaders['Accept-CH']));           
-            
-            $actualValue = explode(',', $responseHeaders['Accept-CH']);            
-            $this->assertEquals(count($expectedValue), count($actualValue));
-                       
+        {   
+            $this->assertTrue(isset($responseHeaders['Accept-CH']));
+       
+            // We don't require the expected list of values to match exactly, as the headers 
+            // used by detection change over time. However, we do make sure that the most 
+            // critical ones are present in Accept-CH.
+            $actualValue = explode(',', $responseHeaders['Accept-CH']);
             foreach($expectedValue as $e) {           
                 $lowerCasedExpectedValue = strtolower($e);
                 $lowerCasedActualArray = array_map('strtolower', array_map('trim', $actualValue));
