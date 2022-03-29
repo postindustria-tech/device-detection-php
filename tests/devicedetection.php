@@ -301,7 +301,7 @@ class ExampleTests extends TestCase
                 
         $this->assertEquals($expectException, $exception);
     }
-/*
+
     public function testFailureToMatch()
     {
         include __DIR__ . "/../examples/cloud/failureToMatch.php";
@@ -311,7 +311,7 @@ class ExampleTests extends TestCase
 
     public function testGettingStarted()
     {
-        include __DIR__ . "/../examples/cloud/gettingstarted.php";
+        include __DIR__ . "/../examples/cloud/gettingStartedConsole.php";
         
         $this->assertTrue(true);
     }
@@ -322,18 +322,5 @@ class ExampleTests extends TestCase
         
         $this->assertTrue(true);
     }
-    
-    public function testWebIntegration()
-    {
-        include __DIR__ . "/../examples/cloud/webIntegration.php";
-        
-        $this->assertTrue(true);
-    }
-
-    public function testUserAgentClientHints()
-    {
-        include __DIR__ . "/../examples/cloud/userAgentClientHints.php";
-        
-        $this->assertTrue(true);
-    }*/
+    // TODO - Add tests for other examples - getting started web, tac lookup, native model lookup.
 }
