@@ -9,9 +9,12 @@
   </php>
   <testsuites>
     <testsuite name="Tests">
+      <file>tests/examples.php</file>
       <file>tests/devicedetection.php</file>
+      <file phpVersion="7.1.0" phpVersionOperator='&gt;'>tests/examplesWeb.php</file>
+      <file phpVersion="6.0.0" phpVersionOperator='&lt;'>tests/examplesWeb_PHP5.php</file>
       <file phpVersion="7.1.0" phpVersionOperator='&gt;'>tests/UACHCloudTests.php</file>
-      <file phpVersion="6.0.0" phpVersionOperator='&lt;'>tests/UACHCloudTests_PHP5.php</file>  	  
+      <file phpVersion="6.0.0" phpVersionOperator='&lt;'>tests/UACHCloudTests_PHP5.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

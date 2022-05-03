@@ -34,34 +34,33 @@
  * - 51degrees/fiftyone.devicedetection
  */ 
 
-require(__DIR__ . "/exampleUtils.php");
-require(__DIR__ . "/../../vendor/autoload.php");
+require_once(__DIR__ . "/exampleUtils.php");
+require_once(__DIR__ . "/../../vendor/autoload.php");
 
 use fiftyone\pipeline\core\PipelineBuilder;
+use fiftyone\pipeline\core\Logger;
 
 class GettingStartedConsole
 {
-    /**
-     * In this example, we use the DeviceDetectionPipelineBuilder and configure it from a file.
-     * For more information about builders in general see the documentation at
-     * http://51degrees.com/documentation/4.3/_concepts__configuration__builders__index.html
-     */
-    public function run($configFile, $logger)
+    public function run($config, $logger, callable $output)
     {
+        // In this example, we use the PipelineBuilder and configure it from a file.
+        // For more information about builders in general see the documentation at
+        // http://51degrees.com/documentation/_concepts__configuration__builders__index.html
         $pipeline = (new PipelineBuilder())
-            ->buildFromConfig($configFile)
+            ->buildFromConfig($config)
+            ->addLogger($logger)
             ->build();
-        
+
         // carry out some sample detections
         foreach ($this->evidenceValues as &$values)
         {
-            $this->analyseEvidence($values, $pipeline, $logger);
+            $this->analyseEvidence($values, $pipeline, $output);
         }
     }
 
-    private function analyseEvidence($evidence, $pipeline, $logger)
+    private function analyseEvidence($evidence, $pipeline, callable $output)
     {
-
         // FlowData is a data structure that is used to convey
         // information required for detection and the results of the
         // detection through the pipeline.
@@ -80,7 +79,7 @@ class GettingStartedConsole
             $message[] = "\t$key: $value";
         }
         
-        $logger->log("info", implode("\n", $message));
+        $output(implode("\n", $message));
 
         // Add the evidence values to the flow data
         $data->evidence->setArray($evidence);
@@ -106,7 +105,7 @@ class GettingStartedConsole
         $this->outputValue("Platform Version", $device->platformversion, $message);
         $this->outputValue("Browser Name", $device->browsername, $message);
         $this->outputValue("Browser Version", $device->browserversion, $message);
-        $logger->log("info", implode("\n", $message));
+        $output(implode("\n", $message));
     }
     
     function outputValue($name, $value, &$message)
@@ -159,43 +158,52 @@ class GettingStartedConsole
         );
 };
 
-function main($argv)
-{
-    // Use the command line args to get the resource key if present.
-    // Otherwise, get it from the environment variable.
-    $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-    
-    // Configure a logger to output to the console.
-    $logger = ExampleUtils::getLogger("Getting Started");
-
-    $configFile = __DIR__ . "/pipeline.json";
-    if (!file_exists($configFile)) {
-        $logger->log("error", "Config file not found at " . $configFile);
-        return;
-    }
-    ExampleUtils::setResourceKeyInFile($configFile, $resourceKey);
-    
-    if (ExampleUtils::configFileHasResourceKey($configFile))
-    {
-        (new GettingStartedConsole())->run($configFile, $logger);
-    }
-    else
-    {
-        $logger->log("error",
-            "No resource key specified in the configuration file ".
-            "'pipeline.json' or the environment variable ".
-            "'".ExampleUtils::RESOURCE_KEY_ENV_VAR."'. The 51Degrees cloud ".
-            "service is accessed using a 'ResourceKey'. For more information ".
-            "see ".
-            "http://51degrees.com/documentation/4.3/_info__resource_keys.html. ".
-            "A resource key with the properties required by this example can be ".
-            "created for free at https://configure.51degrees.com/1QWJwHxl. ".
-            "Once complete, populate the config file or environment variable ".
-            "mentioned at the start of this message with the key.");
-    }
-}
-
+// Only declare and call the main function if this is being run directly.
+// This prevents main from being run where examples are run as part of
+// PHPUnit tests.
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
 {
+    function main($argv)
+    {
+        // Use the command line args to get the resource key if present.
+        // Otherwise, get it from the environment variable.
+        $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
+        
+        // Configure a logger to output to the console.
+        $logger = new Logger("info");
+
+        // Load the configuration file
+        $config = json_decode(file_get_contents(__DIR__."/gettingStartedConsole.json"), true);
+        // Get the resource key setting from the config file. 
+        $resourceKeyFromConfig = ExampleUtils::getResourceKeyFromConfig($config);
+        $configHasKey = empty($resourceKeyFromConfig) == false && strpos($resourceKeyFromConfig, "!!") !== 0;
+
+        // If no resource key is specified in the config file then override it with the key
+        // from the environment variable / command line. 
+        if ($configHasKey === false)
+        {
+            ExampleUtils::setResourceKeyInConfig($config, $resourceKey);
+        }
+
+        if (empty($resourceKey) == false)
+        {
+            (new GettingStartedConsole())->run($config, $logger, ['ExampleUtils', 'output']);
+        }
+        else
+        {
+            $logger->log("error",
+                "No resource key specified in environment variable " .
+                "'".ExampleUtils::RESOURCE_KEY_ENV_VAR."'. The 51Degrees " .
+                "cloud service is accessed using a 'ResourceKey'. " .
+                "For more detail see " .
+                "http://51degrees.com/documentation/4.3/_info__resource_keys.html. " .
+                "A resource key with the properties required by this " .
+                "example can be created for free at " .
+                "https://configure.51degrees.com/g3gMZdPY. " .
+                "Once complete, populated the environment variable " .
+                "mentioned at the start of this message with the key.");
+        }
+    }
+
     main(isset($argv) ? array_slice($argv, 1) : null);
 }
