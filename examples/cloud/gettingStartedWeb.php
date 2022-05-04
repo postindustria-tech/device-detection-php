@@ -75,16 +75,17 @@
  *
  * ## Class
  */
-require(__DIR__ . "/exampleUtils.php");
-require(__DIR__ . "/../../vendor/autoload.php");
+require_once(__DIR__ . "/exampleUtils.php");
+require_once(__DIR__ . "/../../vendor/autoload.php");
 
 use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+use fiftyone\pipeline\core\Logger;
 use fiftyone\pipeline\core\Utils;
 
 
 class GettingStartedWeb
 {
-    public function run($resourceKey, $logger, $output)
+    public function run($resourceKey, $logger, callable $output)
     {
         $javascriptBuilderSettings = array(
             "endpoint" => "/json",
@@ -116,7 +117,7 @@ class GettingStartedWeb
         $this->processRequest($pipeline, $output);
     }
 
-    private function processRequest($pipeline, $output)
+    private function processRequest($pipeline, callable $output)
     {
         // Create the flowdata object.
         $flowdata = $pipeline->createFlowData();
@@ -155,7 +156,7 @@ function main($argv)
     // Otherwise, get it from the environment variable.
     $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
     
-    $logger = ExampleUtils::getLogger("Getting Started");
+    $logger = new Logger("info");
 
     if (empty($resourceKey) == false)
     {
@@ -172,13 +173,9 @@ function main($argv)
             "A resource key with the properties required by this " .
             "example can be created for free at " .
             "https://configure.51degrees.com/g3gMZdPY. " .
-            "Once complete, populated the environment variable " .
+            "Once complete, populate the environment variable " .
             "mentioned at the start of this message with the key.");
     }
 }
 
-if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
-{
-    main(isset($argv) ? array_slice($argv, 1) : null);
-}
-
+main(isset($argv) ? array_slice($argv, 1) : null);

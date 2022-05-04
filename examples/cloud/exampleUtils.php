@@ -21,26 +21,9 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-require(__DIR__ . "/../../vendor/autoload.php");
+require_once(__DIR__ . "/../../vendor/autoload.php");
 
 use fiftyone\pipeline\core\Logger;
-
-class ExampleLogger extends Logger
-{
-    public function logInternal($log)
-    {
-        $message = $this->settings["name"].":".$log["level"].": ".$log["message"]."\n";
-
-        if (php_sapi_name() == "cli")
-        {
-            echo $message;
-        }
-        else
-        {
-            echo "<pre>$message</pre>";
-        }
-    }
-}
 
 class ExampleUtils
 {
@@ -72,42 +55,55 @@ class ExampleUtils
             return "";
         }
     }
-
-    public static function setResourceKeyInFile($configFile, $resourceKey)
-    {
-        $config = json_decode(file_get_contents($configFile), true);
-
-        // Get the resource key setting from the config file. 
-        $resourceKeyFromConfig = $config["PipelineOptions"]["Elements"][0]["BuildParameters"]["resourceKey"];
-        $configHasKey = isset($resourceKeyFromConfig) && empty($resourceKeyFromConfig) == false &&
-            strpos($resourceKeyFromConfig, "!!") === false; 
-
-        // If no resource key is specified in the config file then override it with the key
-        // from the environment variable / command line. 
-        if ($configHasKey === false) {
-            $config["PipelineOptions"]["Elements"][0]["BuildParameters"]["resourceKey"] = $resourceKey;
-        }
-
-        file_put_contents($configFile, json_encode($config, JSON_PRETTY_PRINT));
-    }
     
-    public static function configFileHasResourceKey($configFile)
+    public static function getResourceKeyFromConfig($config)
     {
-        $config = json_decode(file_get_contents($configFile), true);
-
-        return empty($config["PipelineOptions"]["Elements"][0]["BuildParameters"]["resourceKey"]) === false;
+        $key = "";
+        foreach ($config["PipelineOptions"]["Elements"] as $element)
+        {
+            if ($element["BuilderName"] === "fiftyone\\pipeline\\cloudrequestengine\\CloudRequestEngine")
+            {
+                $key = $element["BuildParameters"]["resourceKey"];
+            }
+        }
+        return $key;
     }
 
-    static function getLogger($name)
+    public static function setResourceKeyInConfig(&$config, $key)
     {
-        return new ExampleLogger("info", array("name" => $name));
+        foreach ($config["PipelineOptions"]["Elements"] as &$element)
+        {
+            if ($element["BuilderName"] === "fiftyone\\pipeline\\cloudrequestengine\\CloudRequestEngine")
+            {
+                $element["BuildParameters"]["resourceKey"] = $key;
+            }
+        }
+    }
+
+    public static function output($message)
+    {
+        if (php_sapi_name() == "cli")
+        {
+            echo $message."\n";
+        }
+        else
+        {
+            echo "<pre>$message\n</pre>";
+        }
     }
 
     public static function getHumanReadable($device, $name)
     {
         try
         {
-            $value = $device->$name;
+            if (is_a($device, "fiftyone\\pipeline\\engines\\AspectDataDictionary"))
+            {
+                $value = $device->$name;
+            }
+            else
+            {
+                $value = $device[$name];
+            }
             if ($value->hasValue)
             {
                 if (is_array($value->value))

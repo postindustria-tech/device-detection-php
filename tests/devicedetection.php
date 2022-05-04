@@ -31,7 +31,7 @@ $_SERVER["REMOTE_ADDR"] = "0.0.0.0";
 use PHPUnit\Framework\TestCase;
 use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
 
-class ExampleTests extends TestCase
+class DeviceDetectionTests extends TestCase
 {
     protected $CSVDataFile = __DIR__ . "/51Degrees.csv";
 
@@ -308,19 +308,4 @@ class ExampleTests extends TestCase
 
         $this->assertTrue(true);
     }
-
-    public function testGettingStarted()
-    {
-        include __DIR__ . "/../examples/cloud/gettingStartedConsole.php";
-        
-        $this->assertTrue(true);
-    }
-    
-    public function testMetaData()
-    {
-        include __DIR__ . "/../examples/cloud/metadata.php";
-        
-        $this->assertTrue(true);
-    }
-    // TODO - Add tests for other examples - getting started web, tac lookup, native model lookup.
 }
