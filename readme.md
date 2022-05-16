@@ -35,6 +35,19 @@ php cloud/gettingstarted.php [your resource key]
 This will start a local web server listening on port 3000. 
 Open your web browser and browse to http://localhost:3000/ to see the example in action.
 
+The table below describes the examples that are available.
+
+| Example                                | Description |
+|----------------------------------------|-------------|
+| gettingStartedConsole                  | How to use the 51Degrees Cloud service to determine details about a device based on its User-Agent and User-Agent Client Hints HTTP header values. |
+| gettingStartedWeb                      | How to use the 51Degrees Cloud service to determine details about a device as part of a simple ASP.NET website. |
+| tacLookupConsole                       | How to get device details from a TAC (Type Allocation Code) using the 51Degrees cloud service. |
+| nativeModelLookupConsole               | How to get device details from a native model name using the 51Degrees cloud service. |
+| metaDataConsole                        | Demonstrates how to access meta-data relating to the properties that device detection can populate. |
+| failureToMatch                         | Demonstrates the functionality available when device detection is unable to identify the details of the device. |
+| userAgentClientHints-Web               | Legacy example. Retained for the associated automated tests. See GettingStarted-Web instead. |
+
+
 ## Tests
 This repo has tests for the examples. To run the tests, make sure PHPUnit is installed then,
 in the root of this repo, call:
