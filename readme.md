@@ -9,7 +9,14 @@ This project contains the source code for the PHP implementation of 51Degrees'
 cloud-based device detection engine for use with the 
 [Pipeline API](https://github.com/51Degrees/pipeline-php-core).
 
+## Dependencies
+
+The [tested versions](https://51degrees.com/documentation/_info__tested_versions.html) page shows 
+the PHP versions that we currently test against. The software may run fine against other 
+versions, but additional caution should be applied.
+
 ## Examples
+
 To run the examples, you will need PHP and composer installed.
 Once these are available, install the dependencies required by the examples. 
 Navigate to the repository root and execute:
@@ -68,6 +75,7 @@ a fairly involved process so feel free to [contact us](mailto:support@51degrees.
 if you are having difficulties.
 
 ## Development
+
 When making changes to this repository, it may be necessary to link to a local
 development version of pipeline dependencies. For information on this, see
  [Composer local path](https://getcomposer.org/doc/05-repositories.md#path).
