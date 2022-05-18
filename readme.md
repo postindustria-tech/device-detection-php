@@ -15,6 +15,11 @@ The [tested versions](https://51degrees.com/documentation/_info__tested_versions
 the PHP versions that we currently test against. The software may run fine against other 
 versions, but additional caution should be applied.
 
+You will require a [resource key](https://51degrees.com/documentation/_info__resource_keys.html)
+to use the Cloud API. You can create resource keys using our 
+[configurator](https://configure.51degrees.com/), see our 
+[documentation](https://51degrees.com/documentation/_concepts__configurator.html) on how to use this.
+
 ## Examples
 
 To run the examples, you will need PHP and composer installed.
@@ -53,7 +58,6 @@ The table below describes the examples that are available.
 | metaDataConsole                        | Demonstrates how to access meta-data relating to the properties that device detection can populate. |
 | failureToMatch                         | Demonstrates the functionality available when device detection is unable to identify the details of the device. |
 | userAgentClientHints-Web               | Legacy example. Retained for the associated automated tests. See GettingStarted-Web instead. |
-
 
 ## Tests
 This repo has tests for the examples. To run the tests, make sure PHPUnit is installed then,
