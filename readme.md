@@ -9,7 +9,19 @@ This project contains the source code for the PHP implementation of 51Degrees'
 cloud-based device detection engine for use with the 
 [Pipeline API](https://github.com/51Degrees/pipeline-php-core).
 
+## Dependencies
+
+The [tested versions](https://51degrees.com/documentation/_info__tested_versions.html) page shows 
+the PHP versions that we currently test against. The software may run fine against other 
+versions, but additional caution should be applied.
+
+You will require a [resource key](https://51degrees.com/documentation/_info__resource_keys.html)
+to use the Cloud API. You can create resource keys using our 
+[configurator](https://configure.51degrees.com/), see our 
+[documentation](https://51degrees.com/documentation/_concepts__configurator.html) on how to use this.
+
 ## Examples
+
 To run the examples, you will need PHP and composer installed.
 Once these are available, install the dependencies required by the examples. 
 Navigate to the repository root and execute:
@@ -35,6 +47,18 @@ php cloud/gettingstarted.php [your resource key]
 This will start a local web server listening on port 3000. 
 Open your web browser and browse to http://localhost:3000/ to see the example in action.
 
+The table below describes the examples that are available.
+
+| Example                                | Description |
+|----------------------------------------|-------------|
+| gettingStartedConsole                  | How to use the 51Degrees Cloud service to determine details about a device based on its User-Agent and User-Agent Client Hints HTTP header values. |
+| gettingStartedWeb                      | How to use the 51Degrees Cloud service to determine details about a device as part of a simple ASP.NET website. |
+| tacLookupConsole                       | How to get device details from a TAC (Type Allocation Code) using the 51Degrees cloud service. |
+| nativeModelLookupConsole               | How to get device details from a native model name using the 51Degrees cloud service. |
+| metaDataConsole                        | Demonstrates how to access meta-data relating to the properties that device detection can populate. |
+| failureToMatch                         | Demonstrates the functionality available when device detection is unable to identify the details of the device. |
+| userAgentClientHints-Web               | Legacy example. Retained for the associated automated tests. See GettingStarted-Web instead. |
+
 ## Tests
 This repo has tests for the examples. To run the tests, make sure PHPUnit is installed then,
 in the root of this repo, call:
@@ -55,6 +79,7 @@ a fairly involved process so feel free to [contact us](mailto:support@51degrees.
 if you are having difficulties.
 
 ## Development
+
 When making changes to this repository, it may be necessary to link to a local
 development version of pipeline dependencies. For information on this, see
  [Composer local path](https://getcomposer.org/doc/05-repositories.md#path).
