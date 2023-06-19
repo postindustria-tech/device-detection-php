@@ -33,5 +33,10 @@
     "51degrees/fiftyone.pipeline.core": "4.*",
     "51degrees/fiftyone.pipeline.engines": "4.*",
     "51degrees/fiftyone.pipeline.cloudrequestengine": "4.*"
+  },
+  "config": {
+    "allow-plugins": {
+      "nodejs-php-fallback/nodejs-php-fallback": false
+    }
   }
 }
