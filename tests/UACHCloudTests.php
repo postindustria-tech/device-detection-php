@@ -56,7 +56,7 @@ class UACHCloudTests extends TestCase{
     }
             
     // Data Provider for testAcceptCH
-	public function provider_testAcceptCH()
+	public static function provider_testAcceptCH()
     {
         $superKey = self::getEnvVar(Constants::RESOURCE_ENV_VAR);
         $platformKey = self::getEnvVar(Constants::PLATFORM_ENV_VAR);
