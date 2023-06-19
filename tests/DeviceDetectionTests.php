@@ -129,6 +129,8 @@ class DeviceDetectionTests extends TestCase
                 $expectedProperties = $row;                
                 $rows++;
             }
+        } else {
+            throw new Exception("Failed to open $this->CSVDataFile");
         }
 
         $builder = new DeviceDetectionPipelineBuilder(array(
