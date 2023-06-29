@@ -2,7 +2,8 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$RepoName,
     [Parameter(Mandatory=$true)]
-    [string]$DeviceDetection
+    [string]$DeviceDetection,
+    [string]$CsvUrl
 )
 
 if ($env:GITHUB_JOB -eq "PreBuild") {
@@ -15,10 +16,9 @@ $file = "51Degrees.csv"
 
 if (!(Test-Path $assets/$file)) {
     Write-Output "Downloading $file"
-    Invoke-WebRequest -Uri "https://storage.googleapis.com/51degrees-assets/$DeviceDetection/51Degrees-Tac.zip" -OutFile 51Degrees-Tac.zip
-    Expand-Archive -Path 51Degrees-Tac.zip
-    Get-Content -TotalCount 1 51Degrees-Tac/51Degrees-Tac-All.csv | Out-File $assets/$file # We only need a header
-    Remove-Item -Path 51Degrees-Tac.zip, 51Degrees-Tac/51Degrees-Tac-All.csv
+    ./steps/fetch-csv-assets.ps1 -RepoName $RepoName -LicenseKey $DeviceDetection -Url $CsvUrl
+    Get-Content -TotalCount 1 $RepoName/51Degrees-TacV3.4.trie/51Degrees-Tac-All.csv | Out-File $assets/$file # We only need a header
+    Remove-Item -Path $RepoName/51Degrees-TacV3.4.trie.zip, $RepoName/51Degrees-TacV3.4.trie/51Degrees-Tac-All.csv
 } else {
     Write-Output "'$file' exists, skipping download"
 }
