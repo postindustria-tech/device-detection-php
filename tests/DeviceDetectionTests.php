@@ -58,7 +58,7 @@ class DeviceDetectionTests extends TestCase
             "resourceKey" => $this->getResourceKey()
         ));
 
-        $badUA = 'w5higsnrg';
+        $badUA = 'complete_nonsense';
 
         $pipeline1 = $builder1->build();
 
