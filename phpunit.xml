@@ -1,20 +1,18 @@
 <phpunit>
   <php>
-    <env name="RESOURCEKEY" value="!!YOUR_RESOURCE_KEY!!" force="true"/>
-    <env name="FOD_CLOUD_API_URL" value="" force="true"/>
-    <env name="AcceptChPlatformKey" value="!!YOUR_RESOURCE_KEY!!" force="true"/>
-    <env name="AcceptChHardwareKey" value="!!YOUR_RESOURCE_KEY!!" force="true"/>
-    <env name="AcceptChBrowserKey" value="!!YOUR_RESOURCE_KEY!!" force="true"/>
-    <env name="AcceptChNoneKey" value="!!YOUR_RESOURCE_KEY!!" force="true"/>    
+    <env name="RESOURCEKEY" value="!!YOUR_RESOURCE_KEY!!"/>
+    <env name="FOD_CLOUD_API_URL" value=""/>
+    <env name="AcceptChPlatformKey" value="!!YOUR_RESOURCE_KEY!!"/>
+    <env name="AcceptChHardwareKey" value="!!YOUR_RESOURCE_KEY!!"/>
+    <env name="AcceptChBrowserKey" value="!!YOUR_RESOURCE_KEY!!"/>
+    <env name="AcceptChNoneKey" value="!!YOUR_RESOURCE_KEY!!"/>
   </php>
   <testsuites>
-    <testsuite name="Tests">
-      <file>tests/examples.php</file>
-      <file>tests/devicedetection.php</file>
-      <file phpVersion="7.1.0" phpVersionOperator='&gt;'>tests/examplesWeb.php</file>
-      <file phpVersion="6.0.0" phpVersionOperator='&lt;'>tests/examplesWeb_PHP5.php</file>
-      <file phpVersion="7.1.0" phpVersionOperator='&gt;'>tests/UACHCloudTests.php</file>
-      <file phpVersion="6.0.0" phpVersionOperator='&lt;'>tests/UACHCloudTests_PHP5.php</file>
+    <testsuite name="Integration">
+      <file>tests/ExampleTests.php</file>
+      <file>tests/DeviceDetectionTests.php</file>
+      <file>tests/ExampleWebTests.php</file>
+      <file>tests/UACHCloudTests.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
