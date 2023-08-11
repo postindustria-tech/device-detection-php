@@ -48,9 +48,8 @@ class GettingStartedConsole
         // For more information about builders in general see the documentation at
         // http://51degrees.com/documentation/_concepts__configuration__builders__index.html
         $pipeline = (new PipelineBuilder())
-            ->buildFromConfig($config)
             ->addLogger($logger)
-            ->build();
+            ->buildFromConfig($config);
 
         // carry out some sample detections
         foreach ($this->evidenceValues as &$values)

@@ -65,9 +65,8 @@ class TacLookupConsole
 
         // Create the pipeline using the service provider and the configured options.
         $pipeline = (new PipelineBuilder())
-            ->buildFromConfig($config)
             ->addLogger($logger)
-            ->build();
+            ->buildFromConfig($config);
 
         // Pass a TAC into the pipeline and list the matching devices.
         $this->analyseTac($this->tac1, $pipeline, $output);
