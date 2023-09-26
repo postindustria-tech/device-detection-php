@@ -1,21 +1,21 @@
 # Client Hints to HTTP headers
 
 51Degrees device detection requires User Agent Client Hints evidence to be provided 
-in the HTTP headers format like browser would send them if requested by the server 
-via Accept-CH header / Delegate-CH http-equiv.
+in the HTTP headers format, similar to how the browser would send them if requested by the server 
+via the Accept-CH or Delegate-CH header.
 
-This example code converts User Agent Client Hints obtained thru the 
+This example code converts User Agent Client Hints obtained through the 
 getHighEntropyValues() browser API into HTTP headers format.
 
 
 ## Notes
 
 - **Note 1**: `Sec-CH-UA-Arch`, `Sec-CH-UA-Bitness`, `Sec-CH-UA-Model`, `Sec-CH-UA-Platform`, `Sec-CH-UA-Platform-Version` headers
-are of type `sf-string` according to [WICG spec](https://wicg.github.io/ua-client-hints/#sec-ch-ua-arch) - this menas the values
+are of type `sf-string` according to the [WICG spec](https://wicg.github.io/ua-client-hints/#sec-ch-ua-arch). This means the values
 must be enclosed in quotes (except when the value is empty).
 
-- **Note 2**: the `Sec-CH-UA` and `Sec-CH-UA-Full-Version-List` are list headers - a single space after coma is added. The `sf-list` 
-mentions it is an OWS (optional whitespace), but we found it widely practiced in the industry and also improving readability of the header.
+- **Note 2**: the `Sec-CH-UA` and `Sec-CH-UA-Full-Version-List` are list headers so a single space after the comma is added. The `sf-list` 
+mentions it is an OWS (optional whitespace), but we found it widely practiced in the industry and it also improves readability of the header.
 
 - **Note 3**: Synthesis of `Sec-CH-UA-Full-Version` header is excluded as it is deprecated.
 
