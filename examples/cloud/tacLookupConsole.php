@@ -36,71 +36,11 @@
  * - 51degrees/fiftyone.devicedetection
  */
 
-require_once(__DIR__ . "/exampleUtils.php");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
-use fiftyone\pipeline\cloudrequestengine\CloudRequestEngine;
-use fiftyone\pipeline\core\PipelineBuilder;
 use fiftyone\pipeline\core\Logger;
-use fiftyone\pipeline\devicedetection\HardwareProfileCloud;
-use fiftyone\pipeline\cloudrequestengine\Constants as CloudConstants;
-
-class TacLookupConsole
-{
-    public function run($config, $logger, callable $output, $cloudEndPoint = "")
-    {
-
-        $output("This example shows the details of devices " .
-            "associated with a given 'Type Allocation Code' or 'TAC'.");
-        $output("More background information on TACs can be " .
-            "found through various online sources such as Wikipedia: " .
-            "https://en.wikipedia.org/wiki/Type_Allocation_Code");
-        $output("----------------------------------------");
-
-        // In this example, we use the PipelineBuilder and configure it from a file.
-        // For a demonstration of how to do this in code instead, see the
-        // NativeModelLookup example.
-        // For more information about builders in general see the documentation at
-        // http://51degrees.com/documentation/_concepts__configuration__builders__index.html
-
-        // Create the pipeline using the service provider and the configured options.
-        $pipeline = (new PipelineBuilder())
-            ->addLogger($logger)
-            ->buildFromConfig($config);
-
-        // Pass a TAC into the pipeline and list the matching devices.
-        $this->analyseTac($this->tac1, $pipeline, $output);
-        // Repeat for an alternative TAC.
-        $this->analyseTac($this->tac2, $pipeline, $output);
-    }
-    
-    private function analyseTac($tac, $pipeline, callable $output)
-    {
-        // Create the FlowData instance.
-        $data = $pipeline->createFlowData();
-        // Add the TAC as evidence.
-        $data->evidence->set(CloudConstants::EVIDENCE_QUERY_TAC_KEY, $tac);
-        // Process the supplied evidence.
-        $data->process();
-        // Get result data from the flow data.
-        $result = $data->hardware;
-        $output("Which devices are associated with the " .
-            "TAC '".$tac."'?");
-        // The 'hardware.profiles' object contains one or more devices.
-        // This is the same interface used for standard device detection, so we have
-        // access to all the same properties.
-        forEach($result->profiles as $profile) {
-            $vendor = ExampleUtils::getHumanReadable($profile, "hardwarevendor");
-            $name = ExampleUtils::getHumanReadable($profile, "hardwarename");
-            $model = ExampleUtils::getHumanReadable($profile, "hardwaremodel");
-            $output("\t".$vendor." ".$name." (".$model.")");
-        }
-    }
-
-    // Example values to use when looking up device details from TACs.
-    private $tac1 = "35925406";
-    private $tac2 = "86386802";
-}
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\TacLookupConsole;
 
 // Only declare and call the main function if this is being run directly.
 // This prevents main from being run where examples are run as part of
@@ -131,7 +71,7 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
 
         if (empty($resourceKey) == false)
         {
-            (new TacLookupConsole())->run($config, $logger, ['ExampleUtils', 'output']);
+            (new TacLookupConsole())->run($config, $logger, ['fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils', 'output']);
         }
         else
         {
