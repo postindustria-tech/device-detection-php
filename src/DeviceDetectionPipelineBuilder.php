@@ -27,7 +27,6 @@ namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\core\PipelineBuilder;
 use fiftyone\pipeline\cloudrequestengine\CloudRequestEngine;
-use fiftyone\pipeline\devicedetection\DeviceDetectionCloud;
 
 /**
 * Extension of pipelineBuilder class that allows for the quick generation of a device detection pipeline.
@@ -78,4 +77,4 @@ class DeviceDetectionPipelineBuilder extends PipelineBuilder
                 
         $this->flowElements = $flowElements;
     }
-};
+}
