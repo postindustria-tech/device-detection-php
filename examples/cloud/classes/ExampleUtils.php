@@ -21,9 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-require_once(__DIR__ . "/../../vendor/autoload.php");
-
-use fiftyone\pipeline\core\Logger;
+namespace fiftyone\pipeline\devicedetection\examples\cloud\classes;
 
 class ExampleUtils
 {
@@ -32,17 +30,17 @@ class ExampleUtils
     const RESOURCE_KEY_ENV_VAR = "resource_key";
 
     const ENDPOINT_ENV_VAR = "cloud_endpoint";
-    
+
     public static function getResourceKey()
     {
-        return ExampleUtils::getEnvVariable(ExampleUtils::RESOURCE_KEY_ENV_VAR);
+        return self::getEnvVariable(self::RESOURCE_KEY_ENV_VAR);
     }
 
     public static function getCloudEndpoint()
     {
-        return ExampleUtils::getEnvVariable(ExampleUtils::ENDPOINT_ENV_VAR);
+        return self::getEnvVariable(self::ENDPOINT_ENV_VAR);
     }
-    
+
     private static function getEnvVariable($name)
     {
         $env = getenv();
@@ -55,7 +53,7 @@ class ExampleUtils
             return "";
         }
     }
-    
+
     public static function getResourceKeyFromConfig($config)
     {
         $key = "";
@@ -120,7 +118,7 @@ class ExampleUtils
                 return "Unknown (".$value->noValueMessage.")";
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return "Property not found using the current resource key.";
         }
@@ -139,4 +137,3 @@ class ExampleUtils
         return false;
     }
 }
-?>

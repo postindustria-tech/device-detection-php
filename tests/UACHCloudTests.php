@@ -21,10 +21,10 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-require(__DIR__ . "/../vendor/autoload.php");
-require_once(__DIR__ . '/classes/process.php');
-require_once(__DIR__ . '/classes/constants.php');
+namespace fiftyone\pipeline\devicedetection\tests;
 
+use fiftyone\pipeline\devicedetection\tests\classes\Constants;
+use fiftyone\pipeline\devicedetection\tests\classes\Process;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -43,7 +43,7 @@ class UACHCloudTests extends TestCase{
 			shell_exec("lsof -i tcp:3000 1>/dev/null 2>&1" );
             echo "User Agent Client Hints Web example has started running.\n";
         }else{
-            throw new Exception("Could not start the User Agent Client Hints-Cloud Web example. \n");
+            throw new \Exception("Could not start the User Agent Client Hints-Cloud Web example. \n");
         } 
     }
 
@@ -156,7 +156,7 @@ class UACHCloudTests extends TestCase{
     private static function getEnvVar($name) {
     	$resourceKey = getEnv($name);
         if (!isset($resourceKey) || empty($resourceKey)) {
-            throw new Exception("Environment variable " . $name . " needs to be set to run Cloud tests.");
+            throw new \Exception("Environment variable " . $name . " needs to be set to run Cloud tests.");
         }     
         return $resourceKey;
     }
