@@ -21,8 +21,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-
-require(__DIR__ . "/../vendor/autoload.php");
+namespace fiftyone\pipeline\devicedetection\tests;
 
 // Fake remote address for web integration
 
@@ -130,7 +129,7 @@ class DeviceDetectionTests extends TestCase
                 $rows++;
             }
         } else {
-            throw new Exception("Failed to open $this->CSVDataFile");
+            throw new \Exception("Failed to open $this->CSVDataFile");
         }
 
         $builder = new DeviceDetectionPipelineBuilder(array(
@@ -292,7 +291,7 @@ class DeviceDetectionTests extends TestCase
 
             $result = $flowData->process();
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
             $exception = true;        
 
