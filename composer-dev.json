@@ -27,6 +27,12 @@
       "fiftyone\\pipeline\\devicedetection\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "fiftyone\\pipeline\\devicedetection\\tests\\": "tests/",
+      "fiftyone\\pipeline\\devicedetection\\examples\\cloud\\classes\\": "examples/cloud/classes"
+    }
+  },
   "repositories": [
     {
       "type": "path",
