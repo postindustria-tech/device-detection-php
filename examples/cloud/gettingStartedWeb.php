@@ -75,87 +75,19 @@
  *
  * ## Class
  */
-require_once(__DIR__ . "/exampleUtils.php");
-require_once(__DIR__ . "/../../vendor/autoload.php");
 
-use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+require_once(__DIR__ . '/../../vendor/autoload.php');
+
 use fiftyone\pipeline\core\Logger;
-use fiftyone\pipeline\core\Utils;
-
-
-class GettingStartedWeb
-{
-    public function run($resourceKey, $logger, callable $output)
-    {
-        $javascriptBuilderSettings = array(
-            "endpoint" => "/json",
-            "minify" => true,
-            // The enableCookies setting is needed if you want to work with results from client-side
-            // evidence on the server. For example, precise Apple models or screen dimensions.
-            // This will store the results of client-side detection scripts on the client as cookies.
-            // On subsequent requests, these cookies will be included in the payload and will be 
-            // used by the device detection API when it runs.
-            "enableCookies" => true
-        );
-
-        $builder = new DeviceDetectionPipelineBuilder(array(
-            "resourceKey" => $resourceKey, 
-            "javascriptBuilderSettings" => $javascriptBuilderSettings));
-    
-        // To stop having to construct the pipeline
-        // and re-make cloud API requests used during construction on every page load,
-        // we recommend caching the serialized pipeline to a database or disk.
-        // Below we are using PHP's serialize and writing to a file if it doesn't exist
-        $serializedPipelineFile = __DIR__ . "gettingStartedWeb.pipeline";
-        if(!file_exists($serializedPipelineFile)){
-            $pipeline = $builder->build();
-            file_put_contents($serializedPipelineFile, serialize($pipeline));
-        } else {
-            $pipeline = unserialize(file_get_contents($serializedPipelineFile));
-        }
-
-        $this->processRequest($pipeline, $output);
-    }
-
-    private function processRequest($pipeline, callable $output)
-    {
-        // Create the flowdata object.
-        $flowdata = $pipeline->createFlowData();
-
-        // Add any information from the request (headers, cookies and additional 
-        // client side provided information)
-        $flowdata->evidence->setFromWebRequest();
-
-        // Process the flowdata
-        $flowdata->process();
-
-        // Some browsers require that extra HTTP headers are explicitly
-        // requested. So set whatever headers are required by the browser in
-        // order to return the evidence needed by the pipeline.
-        // More info on this can be found at
-        // https://51degrees.com/blog/user-agent-client-hints
-        Utils::setResponseHeader($flowdata);
-
-        // First we make a JSON route that will be called from the client side
-        // and will return a JSON encoded property database using any additional
-        // evidence provided by the client.
-        if (parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) === "/json") {
-            header('Content-Type: application/json');
-            $output(json_encode($flowdata->jsonbundler->json));
-            return;
-        }
-
-        include_once(__DIR__."/static/page.php");
-
-    }
-}
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\GettingStartedWeb;
 
 function main($argv)
 {
     // Use the command line args to get the resource key if present.
     // Otherwise, get it from the environment variable.
     $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-    
+
     $logger = new Logger("info");
 
     if (empty($resourceKey) == false)

@@ -23,11 +23,15 @@
   "license": "EUPL-1.2",
   "type": "library",
   "autoload": {
-    "classmap": [
-      "DeviceDetectionCloud.php",
-      "DeviceDetectionPipelineBuilder.php",
-      "HardwareProfileCloud.php"
-    ]
+    "psr-4": {
+      "fiftyone\\pipeline\\devicedetection\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "fiftyone\\pipeline\\devicedetection\\tests\\": "tests/",
+      "fiftyone\\pipeline\\devicedetection\\examples\\cloud\\classes\\": "examples/cloud/classes"
+    }
   },
   "repositories": [
     {

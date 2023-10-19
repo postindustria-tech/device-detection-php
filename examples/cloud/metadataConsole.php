@@ -47,76 +47,11 @@
  * - 51degrees/fiftyone.devicedetection
  */
 
-require_once(__DIR__ . "/exampleUtils.php");
-require_once(__DIR__ . "/../../vendor/autoload.php");
+require_once(__DIR__ . '/../../vendor/autoload.php');
 
-use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
-use fiftyone\pipeline\core\PipelineBuilder;
 use fiftyone\pipeline\core\Logger;
-
-class MetaDataConsole
-{
-    /**
-     * In this example, we use the DeviceDetectionPipelineBuilder
-     * and configure it in code. For more information about
-     * pipelines in general see the documentation at
-     * http://51degrees.com/documentation/4.3/_concepts__configuration__builders__index.html
-     */
-    public function run($resourceKey, $logger, callable $output)
-    {
-        $pipeline = (new DeviceDetectionPipelineBuilder(array("resourceKey" => $resourceKey)))
-            ->addLogger($logger)
-            ->build();
-
-        $this->outputProperties($pipeline->getElement("device"), $output);
-        // We use the CloudRequestEngine to get evidence key details, rather than the
-        // DeviceDetectionCloudEngine.
-        // This is because the DeviceDetectionCloudEngine doesn't actually make use
-        // of any evidence values. It simply processes the JSON that is returned
-        // by the call to the cloud service that is made by the CloudRequestEngine.
-        // The CloudRequestEngine is actually taking the evidence values and passing
-        // them to the cloud, so that's the engine we want the keys from.
-        $this->outputEvidenceKeyDetails($pipeline->getElement("cloud"), $output);
-    }
-
-    private function outputEvidenceKeyDetails($engine, callable $output)
-    {
-        $output("");
-        if (is_a($engine->getEvidenceKeyFilter(), "fiftyone\\pipeline\\core\\BasicListEvidenceKeyFilter"))
-        {
-            // If the evidence key filter extends BasicListEvidenceKeyFilter then we can
-            // display a list of accepted keys.
-            $filter = $engine->getEvidenceKeyFilter();
-            $output("Accepted evidence keys:");
-            foreach ($filter->getList() as $key)
-            {
-                $output("\t$key");
-            }
-        }
-        else
-        {
-            output("The evidence key filter has type " .
-                $engine->getEvidenceKeyFilter().". As this does not extend " .
-                "BasicListEvidenceKeyFilter, a list of accepted values cannot be " .
-                "displayed. As an alternative, you can pass evidence keys to " .
-                "filter->filterEvidenceKey(string) to see if a particular key will be included " .
-                "or not.");
-            output("For example, header.user-agent is " .
-                ($engine->getEvidenceKeyFilter().filterEvidenceKey("header.user-agent") ? "" : "not ") .
-                "accepted.");
-        }
-    }
-
-    private function outputProperties($engine, callable $output)
-    {
-        foreach ($engine->getProperties() as $property)
-        {
-            // Output some details about the property.
-            $output("Property - ".$property["name"] . " " .
-                "[Category: ".$property["category"]."] (".$property["type"].")");
-        }
-    }
-};
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\MetadataConsole;
 
 // Only declare and call the main function if this is being run directly.
 // This prevents main from being run where examples are run as part of
@@ -128,12 +63,12 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
         // Use the command line args to get the resource key if present.
         // Otherwise, get it from the environment variable.
         $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-        
+
         $logger = new Logger("info");
 
         if (empty($resourceKey) == false)
         {
-            (new MetaDataConsole())->run($resourceKey, $logger, ["ExampleUtils", "output"]);
+            (new MetaDataConsole())->run($resourceKey, $logger, ["fiftyone\\pipeline\\devicedetection\\examples\\cloud\\classes\\ExampleUtils", "output"]);
         }
         else
         {
