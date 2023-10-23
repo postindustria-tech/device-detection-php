@@ -66,7 +66,7 @@ class DeviceDetectionPipelineBuilder extends PipelineBuilder
         $deviceDetection = new DeviceDetectionCloud();
 
         if (isset($settings["restrictedProperties"])) {
-            $deviceDetection->setRestrictedProperties = $settings["restrictedProperties"];
+            $deviceDetection->setRestrictedProperties($settings["restrictedProperties"]);
         }
 
         $flowElements[] = $deviceDetection;
