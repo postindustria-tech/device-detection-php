@@ -20,8 +20,8 @@ if (!(Test-Path $assets/$file)) {
     }
     Write-Output "Downloading $file"
     ./steps/fetch-csv-assets.ps1 -RepoName $RepoName -LicenseKey $DeviceDetection -Url $CsvUrl
-    Get-Content -TotalCount 1 $RepoName/51Degrees-TacV3.4.trie/51Degrees-Tac-All.csv | Out-File $assets/$file # We only need a header
-    Remove-Item -Path $RepoName/51Degrees-TacV3.4.trie.zip, $RepoName/51Degrees-TacV3.4.trie/51Degrees-Tac-All.csv
+    Get-Content -TotalCount 1 $RepoName/51Degrees-Tac/51Degrees-Tac-All.csv | Out-File $assets/$file # We only need a header
+    Remove-Item -Path $RepoName/51Degrees-Tac.zip, $RepoName/51Degrees-Tac/51Degrees-Tac-All.csv
 } else {
     Write-Output "'$file' exists, skipping download"
 }
