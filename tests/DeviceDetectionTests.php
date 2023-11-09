@@ -106,6 +106,7 @@ class DeviceDetectionTests extends TestCase
         $flowData = $pipeline->createFlowData();
 
         $flowData->evidence->set("header.user-agent", $this->iPhoneUA);
+        $flowData->process();
 
         $properties = $pipeline->getElement("device")->getProperties();
 
