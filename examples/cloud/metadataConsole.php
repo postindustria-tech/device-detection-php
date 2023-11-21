@@ -79,7 +79,7 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
                 "http://51degrees.com/documentation/4.3/_info__resource_keys.html. " .
                 "A resource key with the properties required by this " .
                 "example can be created for free at " .
-                "https://configure.51degrees.com/g3gMZdPY. " .
+                "https://configure.51degrees.com/1QWJwHxl. " .
                 "Once complete, populate the environment variable " .
                 "mentioned at the start of this message with the key.";
 
