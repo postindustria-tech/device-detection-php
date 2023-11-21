@@ -31,7 +31,7 @@ class ExampleUtils
 
     const ENDPOINT_ENV_VAR = "cloud_endpoint";
 
-    public static function getResourceKey()
+    public static function getResourceKeyFromEnv()
     {
         return self::getEnvVariable(self::RESOURCE_KEY_ENV_VAR);
     }
@@ -44,26 +44,39 @@ class ExampleUtils
     private static function getEnvVariable($name)
     {
         $env = getenv();
-        if (isset($env[$name]))
-        {
+        
+        if (isset($env[$name])) {
             return $env[$name];
         }
-        else
-        {
-            return "";
+        
+        return null;
+    }
+
+    public static function getResourceKeyFromCliArgs($argv)
+    {
+        if (is_array($argv) && count($argv) > 0) {
+            return $argv[0];
         }
+        
+        return null;
     }
 
     public static function getResourceKeyFromConfig($config)
     {
-        $key = "";
+        $key = null;
+        
         foreach ($config["PipelineOptions"]["Elements"] as $element)
         {
-            if ($element["BuilderName"] === "fiftyone\\pipeline\\cloudrequestengine\\CloudRequestEngine")
-            {
+            if (
+                $element["BuilderName"] === "fiftyone\\pipeline\\cloudrequestengine\\CloudRequestEngine" &&
+                !empty($element["BuildParameters"]["resourceKey"]) &&
+                strpos($element["BuildParameters"]["resourceKey"], '!!') !== 0
+            ) {
                 $key = $element["BuildParameters"]["resourceKey"];
+                break;
             }
         }
+        
         return $key;
     }
 

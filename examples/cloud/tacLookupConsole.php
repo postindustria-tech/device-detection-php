@@ -49,37 +49,30 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
 {
     function main($argv)
     {
-        // Use the command line args to get the resource key if present.
-        // Otherwise, get it from the environment variable.
-        $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-        
-        // Configure a logger to output to the console.
+        // Configure a logger to output to the console
         $logger = new Logger("info");
 
         // Load the configuration file
         $config = json_decode(file_get_contents(__DIR__."/tacLookupConsole.json"), true);
-        // Get the resource key setting from the config file. 
-        $resourceKeyFromConfig = ExampleUtils::getResourceKeyFromConfig($config);
-        $configHasKey = empty($resourceKeyFromConfig) == false && strpos($resourceKeyFromConfig, "!!") !== 0;
 
-        // If no resource key is specified in the config file then override it with the key
-        // from the environment variable / command line. 
-        if ($configHasKey === false)
-        {
-            ExampleUtils::setResourceKeyInConfig($config, $resourceKey);
+        // Get the resource key from command line args
+        $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
+
+        // Otherwise, get the resource key from the environment variable
+        if (empty($resourceKey)) {
+            $resourceKey = ExampleUtils::getResourceKeyFromEnv();
         }
 
-        if (empty($resourceKey) == false)
-        {
-            (new TacLookupConsole())->run($config, $logger, ['fiftyone\\pipeline\\devicedetection\\examples\\cloud\\classes\\ExampleUtils', 'output']);
+        // Otherwise, get the resource key from the config file
+        if (empty($resourceKey)) {
+            $resourceKey = ExampleUtils::getResourceKeyFromConfig($config);
         }
-        else
-        {
-            $logger->log("error",
-                "No resource key specified on the command line or in " .
-                "the environment variable '".ExampleUtils::RESOURCE_KEY_ENV_VAR."'. " .
+
+        if (empty($resourceKey)) {
+            $message = "No resource key specified in CLI args, environment variable '" .
+                ExampleUtils::RESOURCE_KEY_ENV_VAR . "', or configuration file." . PHP_EOL .
                 "The 51Degrees cloud service is accessed using a 'ResourceKey'. " .
-                "For more information see " .
+                "For more detail see " .
                 "http://51degrees.com/documentation/_info__resource_keys.html. " .
                 "TAC lookup is not available as a free service. This means " .
                 "that you will first need a license key, which can be purchased " .
@@ -88,8 +81,16 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
                 "can be created at https://configure.51degrees.com/QKyYH5XT. You " .
                 "can now populate the environment variable mentioned at the start " .
                 "of this message with the resource key or pass it as the first " .
-                "argument on the command line.");
+                "argument on the command line.";
+
+            $logger->log("error", $message);
+            echo $message . PHP_EOL;
+            exit(1);
         }
+        
+        ExampleUtils::setResourceKeyInConfig($config, $resourceKey);
+
+        (new TacLookupConsole())->run($config, $logger, [ExampleUtils::class, 'output']);
     }
 
     main(isset($argv) ? array_slice($argv, 1) : null);

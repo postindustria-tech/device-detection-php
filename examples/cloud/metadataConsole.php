@@ -60,30 +60,35 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
 {
     function main($argv)
     {
-        // Use the command line args to get the resource key if present.
-        // Otherwise, get it from the environment variable.
-        $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-
+        // Configure a logger to output to the console
         $logger = new Logger("info");
 
-        if (empty($resourceKey) == false)
-        {
-            (new MetaDataConsole())->run($resourceKey, $logger, ["fiftyone\\pipeline\\devicedetection\\examples\\cloud\\classes\\ExampleUtils", "output"]);
+        // Get the resource key from command line args
+        $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
+
+        // Otherwise, get the resource key from the environment variable
+        if (empty($resourceKey)) {
+            $resourceKey = ExampleUtils::getResourceKeyFromEnv();
         }
-        else
-        {
-            $logger->log("error",
-                "No resource key specified in environment variable " .
-                "'".ExampleUtils::RESOURCE_KEY_ENV_VAR."'. The 51Degrees " .
-                "cloud service is accessed using a 'ResourceKey'. " .
+
+        if (empty($resourceKey)) {
+            $message = "No resource key specified in CLI args or environment variable '" .
+                ExampleUtils::RESOURCE_KEY_ENV_VAR . "'." . PHP_EOL .
+                "The 51Degrees cloud service is accessed using a 'ResourceKey'. " .
                 "For more detail see " .
                 "http://51degrees.com/documentation/4.3/_info__resource_keys.html. " .
                 "A resource key with the properties required by this " .
                 "example can be created for free at " .
-                "https://configure.51degrees.com/1QWJwHxl. " .
+                "https://configure.51degrees.com/g3gMZdPY. " .
                 "Once complete, populate the environment variable " .
-                "mentioned at the start of this message with the key.");
+                "mentioned at the start of this message with the key.";
+
+            $logger->log("error", $message);
+            echo $message . PHP_EOL;
+            exit(1);
         }
+
+        (new MetaDataConsole())->run($resourceKey, $logger, [ExampleUtils::class, 'output']);
     }
 
     main(isset($argv) ? array_slice($argv, 1) : null);
