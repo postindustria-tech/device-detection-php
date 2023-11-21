@@ -106,10 +106,8 @@ function main($argv)
             "https://configure.51degrees.com/g3gMZdPY. " .
             "Once complete, populate the environment variable " .
             "mentioned at the start of this message with the key.";
-        
-        $logger->log("error", $message);
-        echo $message . PHP_EOL;
-        exit(1);
+
+        ExampleUtils::logErrorAndExit($logger, $message);
     }
 
     (new GettingStartedWeb())->run($resourceKey, $logger, function($message) { echo $message; });

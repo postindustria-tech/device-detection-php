@@ -149,4 +149,13 @@ class ExampleUtils
         }
         return false;
     }
+
+    public static function logErrorAndExit($logger, $message)
+    {
+        $logger->log('error', $message);
+        
+        echo $message . PHP_EOL;
+        
+        exit(1);
+    }
 }
