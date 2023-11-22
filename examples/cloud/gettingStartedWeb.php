@@ -84,30 +84,33 @@ use fiftyone\pipeline\devicedetection\examples\cloud\classes\GettingStartedWeb;
 
 function main($argv)
 {
-    // Use the command line args to get the resource key if present.
-    // Otherwise, get it from the environment variable.
-    $resourceKey = isset($argv) && count($argv) > 0 ? $argv[0] : ExampleUtils::getResourceKey();
-
+    // Configure a logger to output to the console
     $logger = new Logger("info");
 
-    if (empty($resourceKey) == false)
-    {
-        (new GettingStartedWeb())->run($resourceKey, $logger, function($message) { echo $message; });
+    // Get the resource key from command line args
+    $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
+
+    // Otherwise, get the resource key from the environment variable
+    if (empty($resourceKey)) {
+        $resourceKey = ExampleUtils::getResourceKeyFromEnv();
     }
-    else
-    {
-        $logger->log("error",
-            "No resource key specified in environment variable " .
-            "'".ExampleUtils::RESOURCE_KEY_ENV_VAR."'. The 51Degrees " .
-            "cloud service is accessed using a 'ResourceKey'. " .
+    
+    if (empty($resourceKey)) {
+        $message = "No resource key specified in CLI args or environment variable '" .
+            ExampleUtils::RESOURCE_KEY_ENV_VAR . "'." . PHP_EOL .
+            "The 51Degrees cloud service is accessed using a 'ResourceKey'. " .
             "For more detail see " .
             "http://51degrees.com/documentation/4.3/_info__resource_keys.html. " .
             "A resource key with the properties required by this " .
             "example can be created for free at " .
             "https://configure.51degrees.com/g3gMZdPY. " .
             "Once complete, populate the environment variable " .
-            "mentioned at the start of this message with the key.");
+            "mentioned at the start of this message with the key.";
+
+        ExampleUtils::logErrorAndExit($logger, $message);
     }
+
+    (new GettingStartedWeb())->run($resourceKey, $logger, function($message) { echo $message; });
 }
 
 main(isset($argv) ? array_slice($argv, 1) : null);
