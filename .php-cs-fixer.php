@@ -37,7 +37,8 @@ return (new PhpCsFixer\Config())
     ->setFinder(PhpCsFixer\Finder::create()
         ->in([
             __DIR__ . '/src',
+            __DIR__ . '/tests',
             __DIR__ . '/tests/classes',
-            __DIR__ . '/examples/classes',
+            __DIR__ . '/examples/cloud/classes',
         ])
     );

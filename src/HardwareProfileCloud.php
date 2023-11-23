@@ -21,7 +21,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-
 namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\cloudrequestengine\CloudEngine;
@@ -30,34 +29,28 @@ use fiftyone\pipeline\engines\AspectDataDictionary;
 
 class HardwareProfileCloud extends CloudEngine
 {
-    public $dataKey = "hardware";
-    
-    function processInternal($flowData)
+    public $dataKey = 'hardware';
+
+    public function processInternal($flowData)
     {
-        
-        $cloudData = $flowData->get("cloud")->get("cloud");
-        
+        $cloudData = $flowData->get('cloud')->get('cloud');
+
         $cloudData = json_decode($cloudData, true);
-                
+
         $devices = [];
-        
-        forEach($cloudData["hardware"]["profiles"] as $profile){
-            
+
+        foreach ($cloudData['hardware']['profiles'] as $profile) {
             $device = [];
-            
-            foreach($profile as $propertyKey => $propertyValue){
-                
+
+            foreach ($profile as $propertyKey => $propertyValue) {
                 $device[$propertyKey] = new AspectPropertyValue(null, $propertyValue);
-                
             }
 
             $devices[] = $device;
-            
         }
-        
-        $data = new AspectDataDictionary($this, ["profiles" => $devices]);
-        
+
+        $data = new AspectDataDictionary($this, ['profiles' => $devices]);
+
         $flowData->setElementData($data);
-        
     }
 }

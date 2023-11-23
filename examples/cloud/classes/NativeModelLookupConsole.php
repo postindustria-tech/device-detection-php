@@ -42,7 +42,7 @@
 namespace fiftyone\pipeline\devicedetection\examples\cloud\classes;
 
 use fiftyone\pipeline\cloudrequestengine\CloudRequestEngine;
-use fiftyone\pipeline\cloudrequestengine\Constants as CloudConstants;
+use fiftyone\pipeline\cloudrequestengine\Constants;
 use fiftyone\pipeline\core\PipelineBuilder;
 use fiftyone\pipeline\devicedetection\HardwareProfileCloud;
 
@@ -99,7 +99,7 @@ class NativeModelLookupConsole
         // Create the FlowData instance.
         $data = $pipeline->createFlowData();
         // Add the native model key as evidence.
-        $data->evidence->set(CloudConstants::EVIDENCE_QUERY_NATIVE_MODEL_KEY, $nativemodel);
+        $data->evidence->set(Constants::EVIDENCE_QUERY_NATIVE_MODEL_KEY, $nativemodel);
         // Process the supplied evidence.
         $data->process();
         // Get result data from the flow data.

@@ -38,7 +38,7 @@
 
 namespace fiftyone\pipeline\devicedetection\examples\cloud\classes;
 
-use fiftyone\pipeline\cloudrequestengine\Constants as CloudConstants;
+use fiftyone\pipeline\cloudrequestengine\Constants;
 use fiftyone\pipeline\core\PipelineBuilder;
 
 class TacLookupConsole
@@ -49,7 +49,6 @@ class TacLookupConsole
 
     public function run($config, $logger, callable $output, $cloudEndPoint = '')
     {
-
         $output('This example shows the details of devices ' .
             "associated with a given 'Type Allocation Code' or 'TAC'.");
         $output('More background information on TACs can be ' .
@@ -79,7 +78,7 @@ class TacLookupConsole
         // Create the FlowData instance.
         $data = $pipeline->createFlowData();
         // Add the TAC as evidence.
-        $data->evidence->set(CloudConstants::EVIDENCE_QUERY_TAC_KEY, $tac);
+        $data->evidence->set(Constants::EVIDENCE_QUERY_TAC_KEY, $tac);
         // Process the supplied evidence.
         $data->process();
         // Get result data from the flow data.

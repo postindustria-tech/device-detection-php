@@ -58,7 +58,10 @@ class MetadataConsole
      * In this example, we use the DeviceDetectionPipelineBuilder
      * and configure it in code. For more information about
      * pipelines in general see the documentation at
-     * http://51degrees.com/documentation/4.3/_concepts__configuration__builders__index.html
+     * http://51degrees.com/documentation/4.3/_concepts__configuration__builders__index.html.
+     *
+     * @param string $resourceKey
+     * @param \fiftyone\pipeline\core\Logger $logger
      */
     public function run($resourceKey, $logger, callable $output)
     {
@@ -95,7 +98,7 @@ class MetadataConsole
             $filter = $engine->getEvidenceKeyFilter();
             $output('Accepted evidence keys:');
             foreach ($filter->getList() as $key) {
-                $output("\t$key");
+                $output("\t{$key}");
             }
         } else {
             $output('The evidence key filter has type ' .
