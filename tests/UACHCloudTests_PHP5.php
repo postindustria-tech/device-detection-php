@@ -30,35 +30,37 @@ use PHPUnit\Framework\TestCase;
 /**
  * @requires OS Linux
  */
-class UACHCloudTests_PHP5 extends TestCase{
-
+class UACHCloudTests_PHP5 extends TestCase
+{
     public static $process;
 
     public static function setUpBeforeClass()
     {
         // start server
         self::$process = new Process('php -S localhost:3000 examples/cloud/userAgentClientHints-Web.php');
-        self::$process->start();      
-        if (self::$process->status()){
-			shell_exec("lsof -i tcp:3000 1>/dev/null 2>&1" );
+        self::$process->start();
+        if (self::$process->status()) {
+            shell_exec('lsof -i tcp:3000 1>/dev/null 2>&1');
             echo "User Agent Client Hints Web example has started running.\n";
-        }else{
+        } else {
             throw new \Exception("Could not start the User Agent Client Hints-Cloud Web example. \n");
         }
-        return;		
+
+        return;
     }
 
     public static function tearDownAfterClass()
     {
         // stop server
-        if(self::$process->stop()) {
-            echo "\nProcess stopped for User Agent Client Hints-Cloud Web example. \n";        
+        if (self::$process->stop()) {
+            echo "\nProcess stopped for User Agent Client Hints-Cloud Web example. \n";
         }
-        return;		
+
+        return;
     }
-            
+
     // Data Provider for testAcceptCH
-	public function provider_testAcceptCH()
+    public function provider_testAcceptCH()
     {
         $superKey = self::getEnvVar(Constants::RESOURCE_ENV_VAR);
         $platformKey = self::getEnvVar(Constants::PLATFORM_ENV_VAR);
@@ -66,121 +68,114 @@ class UACHCloudTests_PHP5 extends TestCase{
         $browserKey = self::getEnvVar(Constants::BROWSER_ENV_VAR);
         $noAcceptChKey = self::getEnvVar(Constants::NO_ACCEPTCH_ENV_VAR);
 
-        $resourceKeys = array($superKey, $platformKey, $hardwareKey, $browserKey, $noAcceptChKey);
+        $resourceKeys = [$superKey, $platformKey, $hardwareKey, $browserKey, $noAcceptChKey];
 
         // TODO - Edge removed from test until cloud has been updated
         // with new data file.
-        $userAgents = array(Constants::CHROME_UA, /*Constants::EDGE_UA,*/ Constants::FIREFOX_UA, Constants::SAFARI_UA, Constants::CURL_UA);
+        $userAgents = [Constants::CHROME_UA, /* Constants::EDGE_UA, */ Constants::FIREFOX_UA, Constants::SAFARI_UA, Constants::CURL_UA];
 
-        // Get all combinations of keys and uas and determine 
+        // Get all combinations of keys and uas and determine
         // which values we are expecting to see in Accept-CH.
-                                         
-        $testParameters = array();
+
+        $testParameters = [];
         foreach ($resourceKeys as $key) {
             foreach ($userAgents as $ua) {
-                                    
                 if ($ua == Constants::CHROME_UA || $ua == Constants::EDGE_UA) {
-                    if ($key == $browserKey)
-                    {
-                        $testParameters[] = array($ua, $key, Constants::BROWSER_ACCEPT_CH);                       
+                    if ($key == $browserKey) {
+                        $testParameters[] = [$ua, $key, Constants::BROWSER_ACCEPT_CH];
+                    } elseif ($key == $hardwareKey) {
+                        $testParameters[] = [$ua, $key, Constants::HARDWARE_ACCEPT_CH];
+                    } elseif ($key == $platformKey) {
+                        $testParameters[] = [$ua, $key, Constants::PLATFORM_ACCEPT_CH];
+                    } elseif ($key == $superKey) {
+                        $testParameters[] = [$ua, $key, Constants::SUPER_ACCEPT_CH];
+                    } else {
+                        $testParameters[] = [$ua, $key, Constants::EMPTY_ACCEPT_CH];
                     }
-                    else if ($key == $hardwareKey)
-                    {
-                        $testParameters[] = array($ua, $key, Constants::HARDWARE_ACCEPT_CH);                       
-                    }
-                    else if ($key == $platformKey)
-                    {                    
-                        $testParameters[] = array($ua, $key, Constants::PLATFORM_ACCEPT_CH);                        
-                    }
-                    else if ($key == $superKey)
-                    {
-                        $testParameters[] = array($ua, $key, Constants::SUPER_ACCEPT_CH);                       
-                    }
-                    else {
-                        $testParameters[] = array($ua, $key, Constants::EMPTY_ACCEPT_CH);                     
-                    }                    
+                } else {
+                    $testParameters[] = [$ua, $key, Constants::EMPTY_ACCEPT_CH];
                 }
-                else {
-                    $testParameters[] = array($ua, $key, Constants::EMPTY_ACCEPT_CH);
-                }             
             }
         }
-        
+
         return $testParameters;
-               
     }
 
     // Tests response header value to set in Accept-CH
     // response header.
     /**
      * @dataProvider provider_testAcceptCH
-	 * @requires PHP >= 7.2
+     * @requires PHP >= 7.2
+     * @param mixed $userAgent
+     * @param mixed $resourceKey
+     * @param mixed $expectedValue
      */
     public function testAcceptCH($userAgent, $resourceKey, $expectedValue)
-    {    
-        $requestHeaders = Constants::UA_HEADER . $userAgent . '\r\n' ;
+    {
+        $requestHeaders = Constants::UA_HEADER . $userAgent . '\r\n';
 
-        $context = stream_context_create(array(
-            'http' => array(
+        $context = stream_context_create([
+            'http' => [
                 'method' => 'GET',
-                'header' =>  $requestHeaders
-            )
-        ));
-      
+                'header' => $requestHeaders
+            ]
+        ]);
+
         $data = @file_get_contents(Constants::URL . '?RESOURCEKEY=' . $resourceKey, false, $context);
         $responseHeaders = self::parseHeaders($http_response_header);
 
         $this->assertEquals(200, $responseHeaders['response_code']);
-        
-        if(is_null($expectedValue) || count($expectedValue) == 0) 
-        {      
+
+        if (is_null($expectedValue) || count($expectedValue) == 0) {
             $this->assertFalse(isset($responseHeaders['Accept-CH']));
-        } 
-        else 
-        {   
+        } else {
             $this->assertTrue(isset($responseHeaders['Accept-CH']));
-       
-            // We don't require the expected list of values to match exactly, as the headers 
-            // used by detection change over time. However, we do make sure that the most 
+
+            // We don't require the expected list of values to match exactly, as the headers
+            // used by detection change over time. However, we do make sure that the most
             // critical ones are present in Accept-CH.
             $actualValue = explode(',', $responseHeaders['Accept-CH']);
-            foreach($expectedValue as $e) {           
+            foreach ($expectedValue as $e) {
                 $lowerCasedExpectedValue = strtolower($e);
                 $lowerCasedActualArray = array_map('strtolower', array_map('trim', $actualValue));
-                $this->assertTrue(in_array($lowerCasedExpectedValue, $lowerCasedActualArray));           
+                $this->assertTrue(in_array($lowerCasedExpectedValue, $lowerCasedActualArray));
             }
-        }                          
+        }
     }
 
     /**
      *  Gets environment variable value.
+     * @param mixed $name
      */
-    private static function getEnvVar($name) {
-    	$resourceKey = getEnv($name);
+    private static function getEnvVar($name)
+    {
+        $resourceKey = getenv($name);
         if (!isset($resourceKey) || empty($resourceKey)) {
-            throw new \Exception("Environment variable " . $name . " needs to be set to run Cloud tests.");
-        }     
+            throw new \Exception('Environment variable ' . $name . ' needs to be set to run Cloud tests.');
+        }
+
         return $resourceKey;
     }
 
     /**
      *  Convertes response headers string to an indexed array.
+     * @param mixed $headers
      */
-    private static function parseHeaders( $headers )
+    private static function parseHeaders($headers)
     {
-        $head = array();
-        foreach( $headers as $k=>$v )
-        {
-            $t = explode( ':', $v, 2 );
-            if( isset( $t[1] ) )
-                $head[ trim($t[0]) ] = trim( $t[1] );
-            else
-            {
+        $head = [];
+        foreach ($headers as $k => $v) {
+            $t = explode(':', $v, 2);
+            if (isset($t[1])) {
+                $head[trim($t[0])] = trim($t[1]);
+            } else {
                 $head[] = $v;
-                if( preg_match( "#HTTP/[0-9\.]+\s+([0-9]+)#",$v, $out ) )
+                if (preg_match('#HTTP/[0-9\\.]+\\s+([0-9]+)#', $v, $out)) {
                     $head['response_code'] = intval($out[1]);
+                }
             }
         }
+
         return $head;
     }
 }
