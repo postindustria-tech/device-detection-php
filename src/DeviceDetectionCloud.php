@@ -21,11 +21,13 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+declare(strict_types=1);
+
 namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\cloudrequestengine\CloudEngine;
 
 class DeviceDetectionCloud extends CloudEngine
 {
-    public $dataKey = 'device';
+    public string $dataKey = 'device';
 }
