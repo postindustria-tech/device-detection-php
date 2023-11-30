@@ -21,7 +21,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-
 /**
  * @example cloud/gettingStartedWeb.php
  *
@@ -105,11 +104,11 @@ class GettingStartedWeb
         // we recommend caching the serialized pipeline to a database or disk.
         // Below we are using PHP's serialize and writing to a file if it doesn't exist
         $serializedPipelineFile = __DIR__ . 'gettingStartedWeb.pipeline';
-        if (!file_exists($serializedPipelineFile)) {
+        if (file_exists($serializedPipelineFile)) {
+            $pipeline = unserialize(file_get_contents($serializedPipelineFile));
+        } else {
             $pipeline = $builder->build();
             file_put_contents($serializedPipelineFile, serialize($pipeline));
-        } else {
-            $pipeline = unserialize(file_get_contents($serializedPipelineFile));
         }
 
         $this->processRequest($pipeline, $output);
@@ -140,9 +139,10 @@ class GettingStartedWeb
         if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === '/json') {
             header('Content-Type: application/json');
             $output(json_encode($flowdata->jsonbundler->json));
+
             return;
         }
 
-        include_once(__DIR__ . '/../static/page.php');
+        include_once __DIR__ . '/../static/page.php';
     }
 }

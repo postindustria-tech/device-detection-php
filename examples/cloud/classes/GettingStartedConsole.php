@@ -51,14 +51,14 @@ class GettingStartedConsole
         [
             'header.user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
         ],
-        // Evidence values from a windows 11 device using a browser
+        // Evidence values from a Windows 11 device using a browser
         // that supports User-Agent Client Hints.
         [
             'header.user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
             'header.sec-ch-ua-mobile' => '?0',
-            'header.sec-ch-ua' => "\" Not A; Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"",
-            'header.sec-ch-ua-platform' => "\"Windows\"",
-            'header.sec-ch-ua-platform-version' => "\"14.0.0\""
+            'header.sec-ch-ua' => '" Not A; Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"',
+            'header.sec-ch-ua-platform' => '"Windows"',
+            'header.sec-ch-ua-platform-version' => '"14.0.0"'
         ]
     ];
 
@@ -74,6 +74,22 @@ class GettingStartedConsole
         // carry out some sample detections
         foreach ($this->evidenceValues as &$values) {
             $this->analyseEvidence($values, $pipeline, $output);
+        }
+    }
+
+    public function outputValue($name, $value, &$message)
+    {
+        // Individual result values have a wrapper called
+        // `AspectPropertyValue`. This functions similarly to
+        // a null-able type.
+        // If the value has not been set then trying to access the
+        // `value` method will throw an exception.
+        // `AspectPropertyValue` also includes the `no_value_message`
+        // method, which describes why the value has not been set.
+        if ($value->hasValue) {
+            $message[] = "\t{$name}: {$value->value}";
+        } else {
+            $message[] = "\t{$name}: {$value->noValueMessage}";
         }
     }
 
@@ -93,7 +109,7 @@ class GettingStartedConsole
         // List the evidence
         $message[] = 'Input values:';
         foreach ($evidence as $key => $value) {
-            $message[] = "\t$key: $value";
+            $message[] = "\t{$key}: {$value}";
         }
 
         $output(implode("\n", $message));
@@ -123,21 +139,5 @@ class GettingStartedConsole
         $this->outputValue('Browser Name', $device->browsername, $message);
         $this->outputValue('Browser Version', $device->browserversion, $message);
         $output(implode("\n", $message));
-    }
-
-    function outputValue($name, $value, &$message)
-    {
-        // Individual result values have a wrapper called
-        // `AspectPropertyValue`. This functions similarly to
-        // a null-able type.
-        // If the value has not been set then trying to access the
-        // `value` method will throw an exception.
-        // `AspectPropertyValue` also includes the `no_value_message`
-        // method, which describes why the value has not been set.
-        if ($value->hasValue) {
-            $message[] = "\t$name: $value->value";
-        } else {
-            $message[] = "\t$name: $value->noValueMessage";
-        }
     }
 }
