@@ -21,6 +21,8 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+declare(strict_types=1);
+
 namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\cloudrequestengine\CloudRequestEngine;
@@ -31,10 +33,17 @@ use fiftyone\pipeline\core\PipelineBuilder;
  */
 class DeviceDetectionPipelineBuilder extends PipelineBuilder
 {
-    public $restrictedProperties;
+    /**
+     * @var array<string>
+     */
+    public array $restrictedProperties;
+
+    /**
+     * @var \fiftyone\pipeline\engines\DataKeyedCache
+     */
     public $cache;
-    public $resourceKey;
-    public $licenseKey;
+    public string $resourceKey;
+    public string $licenseKey;
 
     /**
      * settings.resourceKey
@@ -45,12 +54,13 @@ class DeviceDetectionPipelineBuilder extends PipelineBuilder
      *
      * @param array{
      *     resourceKey: string,
-     *     cloudEndPoint: string,
-     *     restrictedProperties: array,
-     *     cloudRequestOrigin: string
+     *     cloudEndPoint?: string,
+     *     cloudRequestOrigin?: string,
+     *     restrictedProperties?: array<string>,
+     *     javascriptBuilderSettings?: array<string, mixed>
      * } $settings
      */
-    public function __construct($settings)
+    public function __construct(array $settings)
     {
         parent::__construct($settings);
 

@@ -21,17 +21,20 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+declare(strict_types=1);
+
 namespace fiftyone\pipeline\devicedetection;
 
 use fiftyone\pipeline\cloudrequestengine\CloudEngine;
 use fiftyone\pipeline\core\AspectPropertyValue;
+use fiftyone\pipeline\core\FlowData;
 use fiftyone\pipeline\engines\AspectDataDictionary;
 
 class HardwareProfileCloud extends CloudEngine
 {
-    public $dataKey = 'hardware';
+    public string $dataKey = 'hardware';
 
-    public function processInternal($flowData)
+    public function processInternal(FlowData $flowData): void
     {
         $cloudData = $flowData->get('cloud')->get('cloud');
 
