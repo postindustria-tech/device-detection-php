@@ -82,17 +82,17 @@ use fiftyone\pipeline\core\Logger;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\GettingStartedWeb;
 
-function main($argv)
+function main()
 {
     // Configure a logger to output to the console
     $logger = new Logger("info");
 
-    // Get the resource key from command line args
-    $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
+    // Get the resource key from the environment variable
+    $resourceKey = ExampleUtils::getResourceKeyFromEnv();
 
-    // Otherwise, get the resource key from the environment variable
+    // Otherwise, get the resource key from the query parameter
     if (empty($resourceKey)) {
-        $resourceKey = ExampleUtils::getResourceKeyFromEnv();
+        $resourceKey = ExampleUtils::getResourceKeyFromQueryParameter();
     }
     
     if (empty($resourceKey)) {
@@ -113,4 +113,4 @@ function main($argv)
     (new GettingStartedWeb())->run($resourceKey, $logger, function($message) { echo $message; });
 }
 
-main(isset($argv) ? array_slice($argv, 1) : null);
+main();

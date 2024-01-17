@@ -45,8 +45,7 @@ use fiftyone\pipeline\devicedetection\examples\cloud\classes\TacLookupConsole;
 // Only declare and call the main function if this is being run directly.
 // This prevents main from being run where examples are run as part of
 // PHPUnit tests.
-if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
-{
+if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
     function main($argv)
     {
         // Configure a logger to output to the console
@@ -54,13 +53,13 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
 
         // Load the configuration file
         $config = json_decode(file_get_contents(__DIR__."/tacLookupConsole.json"), true);
+        
+        // Get the resource key from the environment variable
+        $resourceKey = ExampleUtils::getResourceKeyFromEnv();
 
-        // Get the resource key from command line args
-        $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
-
-        // Otherwise, get the resource key from the environment variable
+        // Otherwise, get the resource key from command line args
         if (empty($resourceKey)) {
-            $resourceKey = ExampleUtils::getResourceKeyFromEnv();
+            $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
         }
 
         // Otherwise, get the resource key from the config file

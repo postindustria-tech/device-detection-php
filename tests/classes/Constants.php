@@ -25,7 +25,7 @@ namespace fiftyone\pipeline\devicedetection\tests\classes;
 
 class Constants
 {
-    public const RESOURCE_ENV_VAR = 'RESOURCEKEY';
+    public const RESOURCE_ENV_VAR = 'resource_key';
     public const PLATFORM_ENV_VAR = 'AcceptChPlatformKey';
     public const HARDWARE_ENV_VAR = 'AcceptChHardwareKey';
     public const BROWSER_ENV_VAR = 'AcceptChBrowserKey';

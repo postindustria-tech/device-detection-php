@@ -34,6 +34,7 @@ use fiftyone\pipeline\devicedetection\examples\cloud\classes\GettingStartedConso
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\MetadataConsole;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\NativeModelLookupConsole;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\TacLookupConsole;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 use PHPUnit\Framework\TestCase;
 
 class ExampleTests extends TestCase
@@ -76,7 +77,7 @@ class ExampleTests extends TestCase
 
     private function getResourceKey()
     {
-        $resourceKey = $_ENV['RESOURCEKEY'];
+        $resourceKey = $_ENV[ExampleUtils::RESOURCE_KEY_ENV_VAR];
 
         if ($resourceKey === '!!YOUR_RESOURCE_KEY!!') {
             $this->fail('You need to create a resource key at ' .

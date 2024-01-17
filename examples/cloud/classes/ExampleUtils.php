@@ -50,6 +50,11 @@ class ExampleUtils
         return null;
     }
 
+    public static function getResourceKeyFromQueryParameter()
+    {
+        return $_GET[self::RESOURCE_KEY_ENV_VAR] ?? null;
+    }
+
     public static function getResourceKeyFromConfig($config)
     {
         $key = null;
