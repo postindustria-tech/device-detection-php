@@ -34,7 +34,6 @@ use fiftyone\pipeline\devicedetection\examples\cloud\classes\GettingStartedConso
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\MetadataConsole;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\NativeModelLookupConsole;
 use fiftyone\pipeline\devicedetection\examples\cloud\classes\TacLookupConsole;
-use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 use PHPUnit\Framework\TestCase;
 
 class ExampleTests extends TestCase
