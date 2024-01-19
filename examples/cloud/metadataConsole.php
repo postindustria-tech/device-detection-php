@@ -63,12 +63,12 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]))
         // Configure a logger to output to the console
         $logger = new Logger("info");
 
-        // Get the resource key from command line args
-        $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
+        // Get the resource key from the environment variable
+        $resourceKey = ExampleUtils::getResourceKeyFromEnv();
 
-        // Otherwise, get the resource key from the environment variable
+        // Otherwise, get the resource key from command line args
         if (empty($resourceKey)) {
-            $resourceKey = ExampleUtils::getResourceKeyFromEnv();
+            $resourceKey = ExampleUtils::getResourceKeyFromCliArgs($argv);
         }
 
         if (empty($resourceKey)) {

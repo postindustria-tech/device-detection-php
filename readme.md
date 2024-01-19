@@ -30,7 +30,9 @@ Navigate to the repository root and execute:
 composer install
 ```
 
-This will create the vendor directory containing autoload.php. 
+This will create the vendor directory containing autoload.php.
+
+Ensure the `resource_key` environment variable is set to your resource key prior to running the example scripts.
 Now navigate to the examples directory and start a PHP server with the relevant file. 
 For example:
 
@@ -41,7 +43,7 @@ php -S localhost:3000 cloud/gettingstarted.php
 or to run in a terminal
 
 ```
-php cloud/gettingstarted.php [your resource key]
+php cloud/gettingstarted.php
 ```
 
 This will start a local web server listening on port 3000. 

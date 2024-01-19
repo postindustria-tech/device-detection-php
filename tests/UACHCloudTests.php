@@ -23,6 +23,7 @@
 
 namespace fiftyone\pipeline\devicedetection\tests;
 
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 use fiftyone\pipeline\devicedetection\tests\classes\Constants;
 use fiftyone\pipeline\devicedetection\tests\classes\Process;
 use PHPUnit\Framework\TestCase;
@@ -118,7 +119,7 @@ class UACHCloudTests extends TestCase
             ]
         ]);
 
-        $data = @file_get_contents(Constants::URL . '?RESOURCEKEY=' . $resourceKey, false, $context);
+        $data = @file_get_contents(Constants::URL . '?' . ExampleUtils::RESOURCE_KEY_ENV_VAR . '=' . $resourceKey, false, $context);
         $responseHeaders = self::parseHeaders($http_response_header);
 
         $this->assertSame(200, $responseHeaders['response_code']);

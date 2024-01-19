@@ -68,6 +68,8 @@ class MetadataConsole
         $pipeline = (new DeviceDetectionPipelineBuilder(['resourceKey' => $resourceKey]))
             ->addLogger($logger)
             ->build();
+        
+        $pipeline->createFlowData()->process();
 
         $this->outputProperties($pipeline->getElement('device'), $output);
         // We use the CloudRequestEngine to get evidence key details, rather than the

@@ -28,6 +28,7 @@ namespace fiftyone\pipeline\devicedetection\tests;
 $_SERVER['REMOTE_ADDR'] = '0.0.0.0';
 
 use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 use PHPUnit\Framework\TestCase;
 
 class DeviceDetectionTests extends TestCase
@@ -285,7 +286,7 @@ class DeviceDetectionTests extends TestCase
 
     private function getResourceKey()
     {
-        $resourceKey = $_ENV['RESOURCEKEY'];
+        $resourceKey = $_ENV[ExampleUtils::RESOURCE_KEY_ENV_VAR];
 
         if ($resourceKey === '!!YOUR_RESOURCE_KEY!!') {
             $this->fail('You need to create a resource key at ' .

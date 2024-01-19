@@ -76,7 +76,7 @@ class ExampleTests extends TestCase
 
     private function getResourceKey()
     {
-        $resourceKey = $_ENV['RESOURCEKEY'];
+        $resourceKey = $_ENV[ExampleUtils::RESOURCE_KEY_ENV_VAR];
 
         if ($resourceKey === '!!YOUR_RESOURCE_KEY!!') {
             $this->fail('You need to create a resource key at ' .

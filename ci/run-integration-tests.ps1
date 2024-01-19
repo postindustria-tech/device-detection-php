@@ -13,7 +13,7 @@ if (!$Keys.TestResourceKey) {
     return
 }
 
-$env:RESOURCEKEY = $Keys.TestResourceKey
+$env:resource_key = $Keys.TestResourceKey
 $env:AcceptChPlatformKey = $Keys.TestResourceKey
 $env:AcceptChHardwareKey = $Keys.TestResourceKey
 $env:AcceptChBrowserKey = $Keys.TestResourceKey

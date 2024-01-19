@@ -57,32 +57,31 @@
 
 require(__DIR__ . "/../../vendor/autoload.php");
 
-use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+use fiftyone\pipeline\core\Logger;
 use fiftyone\pipeline\core\Utils;
+use fiftyone\pipeline\devicedetection\DeviceDetectionPipelineBuilder;
+use fiftyone\pipeline\devicedetection\examples\cloud\classes\ExampleUtils;
 
 // We then create a pipeline with the builder. Create your own resource key for free at https://configure.51degrees.com.
 
-// Check if there is a resource key in the environment variable and use
-// it if there is one. You will need to switch this for your own resource key.
+// Check if there is a resource key in the environment variable or query parameter
+// and use it if there is one. You will need to switch this for your own resource key.
 
-if (isset($_ENV["RESOURCEKEY"])) {
-    $resourceKey = $_ENV["RESOURCEKEY"];
-} 
-else if (isset($_GET['RESOURCEKEY'])) {
-    $resourceKey = $_GET['RESOURCEKEY'];
-}
-else {
-    $resourceKey = "!!YOUR_RESOURCE_KEY!!";
+$resourceKey = ExampleUtils::getResourceKeyFromEnv();
+
+if (empty($resourceKey)) {
+    $resourceKey = ExampleUtils::getResourceKeyFromQueryParameter();
 }
 
-if ($resourceKey === "!!YOUR_RESOURCE_KEY!!") {
-    echo "You need to create a resource key at " .
-        "https://configure.51degrees.com and paste it into the code, " .
-        "replacing !!YOUR_RESOURCE_KEY!!.";
-    echo "\n<br/>";
-    echo "Make sure to include the required properties " .
-        "used by this example.\n<br />";
-    return;
+if (empty($resourceKey)) {
+    $message = 'No resource key specified in the environment variable or query parameter ';
+    $message .= "'" . ExampleUtils::RESOURCE_KEY_ENV_VAR . "'." . PHP_EOL;
+    $message .= 'Create a resource key with the properties required by this example';
+    $message .= 'at https://configure.51degrees.com' . '<br/>';
+    $message .= 'Once complete, populate the environment variable or query parameter ';
+    $message .= 'mentioned at the start of this message with the key.' . '<br/>';
+
+    ExampleUtils::logErrorAndExit(new Logger('info'), $message);
 }
 
 $builder = new DeviceDetectionPipelineBuilder(array(
