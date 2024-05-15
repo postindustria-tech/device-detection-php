@@ -5,6 +5,8 @@ param (
     [string]$CsvUrl
 )
 
+Set-PSDebug -Trace 2
+
 if ($env:GITHUB_JOB -eq "PreBuild") {
     Write-Output "Skipping assets fetching"
     exit 0
@@ -18,7 +20,7 @@ if (!(Test-Path $assets/$file)) {
         Write-Output "::warning file=$($MyInvocation.ScriptName),line=$($MyInvocation.ScriptLineNumber),title=No License Key::A device detection license was not provided, so '$file' will not be downloaded."
         return
     }
-    Write-Output "Downloading $file"
+    Write-Output "Downloading $file at $($CsvUrl -replace 'FLVAAA[^/]+', '')"
     ./steps/fetch-csv-assets.ps1 -RepoName $RepoName -LicenseKey $DeviceDetection -Url $CsvUrl
     Get-Content -TotalCount 1 $RepoName/51Degrees-Tac/51Degrees-Tac-All.csv | Out-File $assets/$file # We only need a header
     Remove-Item -Path $RepoName/51Degrees-Tac.zip, $RepoName/51Degrees-Tac/51Degrees-Tac-All.csv
