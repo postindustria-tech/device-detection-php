@@ -22,7 +22,7 @@ to use the Cloud API. You can create resource keys using our
 
 ## Examples
 
-**Note: Examples run on Linux and macOS. Windows environment is not explicitly supported as it is a rare choice for PHP.**
+**Note: Examples run on Linux and macOS. We don't test on Windows environments as it is a rare choice for PHP.**
 
 To run the examples, you will need PHP and composer installed.
 Once these are available, install (or update) the dependencies required by the examples. 
